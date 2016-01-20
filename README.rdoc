@@ -1,28 +1,13 @@
-== README
+= SNUCSE
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+차기 서울대학교 컴퓨터공학과 커뮤니티!
 
-Things you may want to cover:
+=== Dependencies
 
-* Ruby version
+* Ruby <em>≥ 2.2</em>
+* {ExecJS Runtime}[https://github.com/rails/execjs#readme]
 
-* System dependencies
+=== How to run
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+  $ bundle install
+  $ rails s
