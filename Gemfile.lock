@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/Apipie/apipie-rails.git
+  revision: 296c097f9acb951149d3a67db69b84eb216bdd7e
+  specs:
+    apipie-rails (0.3.6)
+      json
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -141,6 +148,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  apipie-rails!
   bcrypt (~> 3.1.7)
   byebug
   coffee-rails (~> 4.1.0)
