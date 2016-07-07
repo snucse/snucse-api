@@ -1,5 +1,6 @@
 class Api::V1::ArticlesController < Api::V1::ApiController
   api! "글 목록을 전달한다."
+  param :group_id, Integer, desc: "설정된 경우 특정 모임의 글만 전달한다.", required: false
   example <<-EOS
   {
     "articles": [
@@ -10,6 +11,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   EOS
   def index
     @articles = Article.all.includes(:group, :writer)
+    @articles = @articles.where(group_id: params[:group_id]) if params[:group_id]
   end
 
   api! "글을 조회한다."
