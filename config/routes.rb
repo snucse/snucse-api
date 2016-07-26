@@ -8,6 +8,7 @@ Rails.application.routes.draw do
           get :following
         end
       end
+      post 'users/sign_in'
     end
   end
 end
