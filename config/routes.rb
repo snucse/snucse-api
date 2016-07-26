@@ -7,6 +7,10 @@ Rails.application.routes.draw do
         collection do
           get :following
         end
+        member do
+          post :follow
+          post :unfollow
+        end
       end
       post 'users/sign_in'
     end

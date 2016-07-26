@@ -41,4 +41,22 @@ class Api::V1::GroupsController < Api::V1::ApiController
   def show
     @group = Group.find params[:id]
   end
+
+  api! "모임을 팔로우한다."
+  def follow
+    Follow.create(
+      user_id: @user.id,
+      group_id: params[:id]
+    )
+    render json: {}
+  end
+
+  api! "모임을 팔로우 취소한다."
+  def unfollow
+    Follow.where(
+      user_id: @user.id,
+      group_id: params[:id]
+    ).destroy_all
+    render json: {}
+  end
 end
