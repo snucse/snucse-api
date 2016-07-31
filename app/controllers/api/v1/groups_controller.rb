@@ -40,6 +40,7 @@ class Api::V1::GroupsController < Api::V1::ApiController
   EOS
   def show
     @group = Group.find params[:id]
+    @following = Follow.where(group_id: @group.id, user_id: @user.id).any?
   end
 
   api! "모임을 팔로우한다."
