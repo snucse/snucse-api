@@ -1,5 +1,10 @@
 json.articles @articles do |article|
-  json.(article, :id, :title, :content, :created_at, :updated_at)
+  json.(article, :id, :title, :content)
+  json.created_at do
+    json.date article.created_at.strftime("%Y%m%d")
+    json.time article.created_at.strftime("%H:%M:%S")
+    json.updated article.created_at != article.updated_at
+  end
   json.group do
     json.(article.group, :id, :name)
   end
