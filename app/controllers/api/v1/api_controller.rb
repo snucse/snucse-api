@@ -21,4 +21,14 @@ class Api::V1::ApiController < ApplicationController
   def render_unauthorized
     render json: {}, status: :unauthorized
   end
+
+  rescue_from Apipie::ParamError do |exception|
+    error = exception.error rescue "required"
+    json = {
+      exception.param.name => error
+    }
+    render status: :bad_request, json: {
+      errors: json
+    }
+  end
 end
