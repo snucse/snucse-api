@@ -1,5 +1,5 @@
 class Api::V1::UsersController < Api::V1::ApiController
-  skip_before_action :check_api_key, only: :sign_in
+  skip_before_action :check_api_key, only: [:sign_in, :sign_up]
   api! "인증 후 access token을 전달한다."
   param :username, String, desc: "사용자의 계정명(아이디)", required: true
   param :password, String, desc: "사용자의 비밀번호", required: true
@@ -20,6 +20,24 @@ class Api::V1::UsersController < Api::V1::ApiController
       }
     else
       render status: 403, json: {}
+    end
+  end
+
+  api! "회원 가입을 처리한다."
+  param :username, String, desc: "사용할 계정명(아이디)" required: true
+  param :password, String, desc: "사용할 비밀번호", required: true
+  param :name, String, desc: "사용자의 이름", required: true
+  error code: 400, desc: "잘못된 회원 가입 요청"
+  def sign_up
+    user = User.new(
+      username: params[:username],
+      password: params[:password],
+      name: params[:name]
+    )
+    if user.save
+      render json: {}
+    else
+      render json: {}, status: :bad_request
     end
   end
 end

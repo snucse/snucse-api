@@ -14,6 +14,7 @@ Rails.application.routes.draw do
         end
       end
       post 'users/sign_in'
+      post 'users/sign_up'
     end
   end
 end
