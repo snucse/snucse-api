@@ -10,8 +10,8 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   }
   EOS
   def index
-    @articles = Article.all.includes(:profile, :writer)
-    @articles = @articles.where(profile_id: params[:profile_id]) if params[:profile_id]
+    @articles = Article.all.includes(:profiles, :writer)
+    @articles = Profile.find(params[:profile_id]).articles.includes(:profiles, :writer) if params[:profile_id]
   end
 
   api! "글을 조회한다."
@@ -22,10 +22,9 @@ class Api::V1::ArticlesController < Api::V1::ApiController
     "content": "content",
     "created_at": "2016-07-01T00:00:00.000Z",
     "updated_at": "2016-07-01T00:00:00.000Z",
-    "profile": {
-      "id": 1,
-      "name": "13학번 모임"
-    },
+    "profiles": [
+      {"id": 1, "name": "13학번 모임"}
+    ],
     "writer": {
       "id": 1,
       "username": "writer",
@@ -39,13 +38,13 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   end
 
   api! "글을 생성한다."
-  param :profile_id, Integer, desc: "글이 작성되는 프로필의 ID", required: true
+  param :profile_ids, String, desc: "글이 작성되는 프로필의 ID, ','로 연결된 숫자 목록", required: true
   param :title, String, desc: "글 제목", required: true
   param :content, String, desc: "글 내용", required: true
   def create
     @article = Article.new(
       writer_id: @user.id,
-      profile_id: params[:profile_id],
+      profile_ids: params[:profile_ids].split(","),
       title: params[:title],
       content: params[:content]
     )
