@@ -1,6 +1,6 @@
-class CreateGroups < ActiveRecord::Migration
+class CreateProfiles < ActiveRecord::Migration
   def change
-    create_table :groups do |t|
+    create_table :profiles do |t|
       t.string :name
       t.integer :admin_id
 

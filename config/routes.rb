@@ -4,7 +4,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :articles, defaults: {format: :json}
       resources :comments, defaults: {format: :json}
-      resources :groups, only: [:index, :show], defaults: {format: :json} do
+      resources :profiles, only: [:index, :show], defaults: {format: :json} do
         collection do
           get :following
         end

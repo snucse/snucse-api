@@ -5,8 +5,8 @@ json.articles @articles do |article|
     json.time article.created_at.strftime("%H:%M:%S")
     json.updated article.created_at != article.updated_at
   end
-  json.group do
-    json.(article.group, :id, :name)
+  json.profile do
+    json.(article.profile, :id, :name)
   end
   json.writer do
     json.(article.writer, :id, :username, :name, :profile_image_uri)
