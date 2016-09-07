@@ -4,13 +4,14 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :articles, defaults: {format: :json}
       resources :comments, defaults: {format: :json}
-      resources :profiles, only: [:index, :show], defaults: {format: :json} do
+      resources :profiles, except: :destroy, defaults: {format: :json} do
         collection do
           get :following
         end
         member do
           post :follow
           post :unfollow
+          post :transfer
         end
       end
       post 'users/sign_in'
