@@ -70,7 +70,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
     )
       render :show
     else
-      render json: @article.errors, sttatus: :bad_request
+      render json: @article.errors, status: :bad_request
     end
   end
 
