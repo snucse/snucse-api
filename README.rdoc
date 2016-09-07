@@ -12,4 +12,4 @@
   $ bundle install
   $ rails s
 
-=== [api](http://snucse.snucse.org:32123/apipie)
+=== api(http://snucse.snucse.org:32123/apipie)
