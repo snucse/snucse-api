@@ -22,10 +22,18 @@ class Api::V1::ApiController < ApplicationController
     render json: {}, status: :unauthorized
   end
 
-  rescue_from Apipie::ParamError do |exception|
-    error = exception.error rescue "required"
+  rescue_from Apipie::ParamMissing do |exception|
     json = {
-      exception.param.name => error
+      exception.param.name => "required"
+    }
+    render status: :bad_request, json: {
+      errors: json
+    }
+  end
+
+  rescue_from Apipie::ParamInvalid do |exception|
+    json = {
+      exception.param.to_s => "invalid"
     }
     render status: :bad_request, json: {
       errors: json
