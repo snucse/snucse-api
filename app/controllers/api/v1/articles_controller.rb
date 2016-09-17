@@ -42,9 +42,13 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   param :title, String, desc: "글 제목", required: true
   param :content, String, desc: "글 내용", required: true
   def create
+    profile_ids = params[:profile_ids].split(",")
+    if profile_ids.empty? or profile_ids.any? {|x| x !~ /^\d+$/}
+      render json: {}, status: :bad_request and return
+    end
     @article = Article.new(
       writer_id: @user.id,
-      profile_ids: params[:profile_ids].split(","),
+      profile_ids: profile_ids,
       title: params[:title],
       content: params[:content]
     )
