@@ -29,12 +29,21 @@ class Api::V1::UsersController < Api::V1::ApiController
   param :name, String, desc: "사용자의 이름", required: true
   error code: 400, desc: "잘못된 회원 가입 요청"
   def sign_up
+    if Profile.where(sid: params[:username]).any?
+      render json: {}, status: :bad_request and return
+    end
     user = User.new(
       username: params[:username],
       password: params[:password],
       name: params[:name]
     )
     if user.save
+      Profile.create(
+        name: params[:name],
+        admin_id: user.id,
+        description: "",
+        sid: params[:username]
+      )
       render json: {}
     else
       render json: {}, status: :bad_request
