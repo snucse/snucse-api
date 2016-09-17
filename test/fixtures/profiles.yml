@@ -1,0 +1,17 @@
+admin:
+  name: "관리자"
+  admin: admin
+  description: ""
+  sid: "admin"
+
+other:
+  name: "다른사람"
+  admin: other
+  description: ""
+  sid: "other"
+
+_16:
+  name: "16학번 모임"
+  admin: admin
+  description: ""
+  sid: "_16"
