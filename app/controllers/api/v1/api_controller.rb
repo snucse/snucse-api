@@ -39,4 +39,8 @@ class Api::V1::ApiController < ApplicationController
       errors: json
     }
   end
+
+  rescue_from ActiveRecord::RecordNotFound do |exception|
+    render status: :not_found, json: {}
+  end
 end
