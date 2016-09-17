@@ -1,0 +1,12 @@
+admin_key:
+  user: admin
+  access_token: "abcdef0123456789abcdef"
+
+revoked_key:
+  user: admin
+  access_token: "fedcba9876543210fedcba"
+  revoked_at: "2016-09-01 00:00:00"
+
+other_key:
+  user: other
+  access_token: "abcdefabcdef0123456789"
