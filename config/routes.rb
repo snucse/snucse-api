@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       end
       post 'users/sign_in'
       post 'users/sign_up'
+      resources :feeds, only: :index, defaults: {format: :json}
     end
   end
 end

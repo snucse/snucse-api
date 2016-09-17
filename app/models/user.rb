@@ -5,4 +5,5 @@ class User < ActiveRecord::Base
   has_many :favorite_articles
   has_many :favorites, through: :favorite_articles, source: :article
   validates_uniqueness_of :username
+  has_many :feeds, through: :groups, source: :articles
 end
