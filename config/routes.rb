@@ -14,8 +14,11 @@ Rails.application.routes.draw do
           post :transfer
         end
       end
-      post 'users/sign_in'
-      post 'users/sign_up'
+      namespace :users, defaults: {format: :json} do
+        post :sign_in
+        post :sign_up
+        get :me
+      end
       resources :feeds, only: :index, defaults: {format: :json}
     end
   end

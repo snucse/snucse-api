@@ -49,4 +49,13 @@ class Api::V1::UsersController < Api::V1::ApiController
       render json: {}, status: :bad_request
     end
   end
+
+  api! "로그인한 사용자의 정보를 전달한다."
+  example <<-EOS
+  {
+    "id": 1
+  }
+  EOS
+  def me
+  end
 end
