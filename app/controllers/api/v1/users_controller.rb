@@ -6,7 +6,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   error code: 403, desc: "존재하지 않는 계정이거나 비밀번호가 일치하지 않는 경우"
   example <<-EOS
   {
-    "access_token": "abcdef0123456789abcdef"
+    "accessToken": "abcdef0123456789abcdef"
   }
   EOS
   def sign_in

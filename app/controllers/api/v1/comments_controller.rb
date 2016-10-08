@@ -18,7 +18,7 @@ class Api::V1::CommentsController < Api::V1::ApiController
   {
     "id": 1,
     "content": "content",
-    "created_at": {
+    "createdAt": {
       "date": "20160801",
       "time": "01:23:45",
       "updated": false
@@ -27,7 +27,7 @@ class Api::V1::CommentsController < Api::V1::ApiController
       "id": 1,
       "username": "writer",
       "name": "작성자",
-      "profile_image_url": "http://placehold.it/100x100"
+      "profileImageUrl": "http://placehold.it/100x100"
     }
   }
   EOS

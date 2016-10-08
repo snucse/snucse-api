@@ -20,8 +20,8 @@ class Api::V1::ArticlesController < Api::V1::ApiController
     "id": 1,
     "title": "title",
     "content": "content",
-    "created_at": "2016-07-01T00:00:00.000Z",
-    "updated_at": "2016-07-01T00:00:00.000Z",
+    "createdAt": "2016-07-01T00:00:00.000Z",
+    "updatedAt": "2016-07-01T00:00:00.000Z",
     "profiles": [
       {"id": 1, "name": "13학번 모임"}
     ],
@@ -29,7 +29,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
       "id": 1,
       "username": "writer",
       "name": "작성자",
-      "profile_image_url": "http://placehold.it/100x100"
+      "profileImageUrl": "http://placehold.it/100x100"
     }
   }
   EOS
