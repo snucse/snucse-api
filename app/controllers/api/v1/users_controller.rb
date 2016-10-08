@@ -16,7 +16,7 @@ class Api::V1::UsersController < Api::V1::ApiController
         user_id: user.id
       )
       render json: {
-        access_token: api_key.access_token
+        accessToken: api_key.access_token
       }
     else
       render status: 403, json: {}
