@@ -39,24 +39,26 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   }
   EOS
   def show
-    @profile = Profile.find params[:id]
+    @profile = Profile.find_by_sid params[:id]
     @following = Follow.where(profile_id: @profile.id, user_id: @user.id).any?
   end
 
   api! "프로필을 팔로우한다."
   def follow
+    profile_id = Profile.find_by_sid(params[:id]).id
     Follow.create(
       user_id: @user.id,
-      profile_id: params[:id]
+      profile_id: profile_id
     )
     render json: {}
   end
 
   api! "프로필을 팔로우 취소한다."
   def unfollow
+    profile_id = Profile.find_by_sid(params[:id]).id
     Follow.where(
       user_id: @user.id,
-      profile_id: params[:id]
+      profile_id: profile_id
     ).destroy_all
     render json: {}
   end
@@ -89,7 +91,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   param :description, String, desc: "프로필 대문에 표시될 내용", required: true
   error code: 401, desc: "자신이 관리자가 아닌 프로필을 수정하려고 하는 경우"
   def update
-    @profile = Profile.find params[:id]
+    @profile = Profile.find_by_sid params[:id]
     if @user != @profile.admin
       render_unauthorized and return
     end
@@ -107,7 +109,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   param :admin_id, Integer, desc: "새로운 관리자의 ID", required: true
   error code: 401, desc: "자신이 관리자가 아닌 프로필을 수정하려고 하는 경우"
   def transfer
-    @profile = Profile.find params[:id]
+    @profile = Profile.find_by_sid params[:id]
     if @user != @profile.admin
       render_unauthorized and return
     end

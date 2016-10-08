@@ -1,4 +1,5 @@
-json.(@profile, :id, :sid, :name, :description)
+json.(@profile, :name, :description)
+json.id @profile.sid
 json.admin do
   json.(@profile.admin, :id, :username, :name)
 end

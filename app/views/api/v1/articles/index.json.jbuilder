@@ -6,7 +6,8 @@ json.articles @articles do |article|
     json.updated article.created_at != article.updated_at
   end
   json.profiles article.profiles do |profile|
-    json.(profile, :id, :name)
+    json.(profile, :name)
+    json.id profile.sid
   end
   json.writer do
     json.(article.writer, :id, :username, :name, :profile_image_uri)

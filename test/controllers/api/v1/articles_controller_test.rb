@@ -46,7 +46,7 @@ class Api::V1::ArticlesControllerTest < ActionController::TestCase
         )
       end
     end
-    profile_id = Profile.last.id
+    profile_id = Profile.last.sid
     get :index, profile_id: profile_id, format: :json
     assert_response :success
     response = JSON.parse @response.body
@@ -63,7 +63,7 @@ class Api::V1::ArticlesControllerTest < ActionController::TestCase
 
   test "[articles#create] 필수 parameter가 없는 경우 실패" do
     set_access_token
-    profile_ids = [Profile.last.id].join(",")
+    profile_ids = [Profile.last.sid].join(",")
     post :create, title: "title", content: "content"
     assert_response :bad_request
     post :create, profile_ids: profile_ids, content: "content"
@@ -74,7 +74,7 @@ class Api::V1::ArticlesControllerTest < ActionController::TestCase
 
   test "[articles#create] 글 생성" do
     set_access_token
-    profile_ids = [Profile.last.id].join(",")
+    profile_ids = [Profile.last.sid].join(",")
     title = "titletitle"
     content = "contentcontent"
     post :create, profile_ids: profile_ids, title: title, content: content, format: :json

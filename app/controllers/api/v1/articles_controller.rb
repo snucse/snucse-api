@@ -1,6 +1,6 @@
 class Api::V1::ArticlesController < Api::V1::ApiController
   api! "글 목록을 전달한다."
-  param :profile_id, Integer, desc: "설정된 경우 특정 프로필의 글만 전달한다.", required: false
+  param :profile_id, String, desc: "설정된 경우 특정 프로필의 글만 전달한다.", required: false
   example <<-EOS
   {
     "articles": [
@@ -11,7 +11,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   EOS
   def index
     @articles = Article.all.includes(:profiles, :writer)
-    @articles = Profile.find(params[:profile_id]).articles.includes(:profiles, :writer) if params[:profile_id]
+    @articles = Profile.find_by_sid(params[:profile_id]).articles.includes(:profiles, :writer) if params[:profile_id]
   end
 
   api! "글을 조회한다."
@@ -38,14 +38,12 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   end
 
   api! "글을 생성한다."
-  param :profile_ids, String, desc: "글이 작성되는 프로필의 ID, ','로 연결된 숫자 목록", required: true
+  param :profile_ids, String, desc: "글이 작성되는 프로필의 ID, ','로 연결된 문자열 목록", required: true
   param :title, String, desc: "글 제목", required: true
   param :content, String, desc: "글 내용", required: true
   def create
-    profile_ids = params[:profile_ids].split(",")
-    if profile_ids.empty? or profile_ids.any? {|x| x !~ /^\d+$/}
-      render json: {}, status: :bad_request and return
-    end
+    profile_ids = params[:profile_ids].split(",").map {|sid| Profile.find_by_sid(sid).id}
+    render json: {}, status: :bad_request and return if profile_ids.empty?
     @article = Article.new(
       writer_id: @user.id,
       profile_ids: profile_ids,
