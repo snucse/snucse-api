@@ -106,7 +106,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   end
 
   api! "프로필의 관리자를 다른 사용자로 바꾼다."
-  param :admin_id, Integer, desc: "새로운 관리자의 ID", required: true
+  param :adminId, Integer, desc: "새로운 관리자의 ID", required: true
   error code: 401, desc: "자신이 관리자가 아닌 프로필을 수정하려고 하는 경우"
   def transfer
     @profile = Profile.find_by_sid params[:id]
@@ -114,7 +114,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
       render_unauthorized and return
     end
     if @profile.update(
-      admin_id: params[:admin_id]
+      admin_id: params[:adminId]
     )
       render :show
     else

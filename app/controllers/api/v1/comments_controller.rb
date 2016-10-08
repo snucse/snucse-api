@@ -1,6 +1,6 @@
 class Api::V1::CommentsController < Api::V1::ApiController
   api! "댓글 목록을 전달한다."
-  param :article_id, Integer, desc: "댓글 목록을 가져올 글의 ID", required: true
+  param :articleId, Integer, desc: "댓글 목록을 가져올 글의 ID", required: true
   example <<-EOS
   {
     "comments": [
@@ -10,7 +10,7 @@ class Api::V1::CommentsController < Api::V1::ApiController
   }
   EOS
   def index
-    @comments = Comment.where(article_id: params[:article_id]).includes(:writer)
+    @comments = Comment.where(article_id: params[:articleId]).includes(:writer)
   end
 
   api! "댓글을 조회한다."
@@ -36,12 +36,12 @@ class Api::V1::CommentsController < Api::V1::ApiController
   end
 
   api! "댓글을 생성한다."
-  param :article_id, Integer, desc: "댓글이 작성되는 글의 ID", required: true
+  param :articleId, Integer, desc: "댓글이 작성되는 글의 ID", required: true
   param :content, String, desc: "댓글 내용", required: true
   def create
     @comment = Comment.new(
       writer_id: @user.id,
-      article_id: params[:article_id],
+      article_id: params[:articleId],
       content: params[:content]
     )
     if @comment.save
