@@ -26,6 +26,7 @@ Rails.application.routes.draw do
         post :sign_up
         get :me
       end
+      resources :tags, only: :show, param: :tag
       resources :feeds, only: :index
     end
   end
