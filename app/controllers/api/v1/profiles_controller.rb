@@ -64,12 +64,12 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   end
 
   api! "프로필을 생성한다."
-  param :sid, /^[A-Za-z_][A-Za-z0-9_]*$/, desc: "주소 등에서 쓰일 프로필의 식별자", required: true
+  param :id, /^[A-Za-z_][A-Za-z0-9_]*$/, desc: "주소 등에서 쓰일 프로필의 식별자", required: true
   param :name, String, desc: "프로필의 이름", required: true
   param :description, String, desc: "프로필 대문에 표시될 내용", required: true
   def create
     @profile = Profile.new(
-      sid: params[:sid],
+      sid: params[:id],
       name: params[:name],
       admin_id: @user.id,
       description: params[:description]
