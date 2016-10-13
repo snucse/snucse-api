@@ -121,4 +121,22 @@ class Api::V1::ProfilesController < Api::V1::ApiController
       render json: @profile.errors, status: :bad_request
     end
   end
+
+  api! "프로필에 태그를 추가한다."
+  param :tag, String, desc: "추가할 태그", required: true
+  def add_tag
+    @profile = Profile.find_by_sid params[:id]
+    tag = Tag.find_or_create_by(name: params[:tag])
+    @profile.tags << tag
+    render :show
+  end
+
+  api! "프로필에서 태그를 삭제한다."
+  param :tag, String, desc: "삭제할 태그", required: true
+  def destroy_tag
+    @profile = Profile.find_by_sid params[:id]
+    tag = Tag.find_by_name params[:tag]
+    @profile.tags.destroy tag
+    render :show
+  end
 end

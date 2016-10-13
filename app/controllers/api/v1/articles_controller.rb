@@ -86,4 +86,22 @@ class Api::V1::ArticlesController < Api::V1::ApiController
     @article.destroy
     head :no_content
   end
+
+  api! "글에 태그를 추가한다."
+  param :tag, String, desc: "추가할 태그", required: true
+  def add_tag
+    @article = Article.find params[:id]
+    tag = Tag.find_or_create_by(name: params[:tag])
+    @article.tags << tag
+    render :show
+  end
+
+  api! "글에서 태그를 삭제한다."
+  param :tag, String, desc: "삭제할 태그", required: true
+  def destroy_tag
+    @article = Article.find params[:id]
+    tag = Tag.find_by_name params[:tag]
+    @article.tags.destroy tag
+    render :show
+  end
 end

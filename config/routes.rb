@@ -2,7 +2,12 @@ Rails.application.routes.draw do
   apipie
   namespace :api, defaults: {format: :json} do
     namespace :v1 do
-      resources :articles
+      resources :articles do
+        member do
+          post :add_tag
+          post :destroy_tag
+        end
+      end
       resources :comments
       resources :profiles, except: :destroy do
         collection do
@@ -12,6 +17,8 @@ Rails.application.routes.draw do
           post :follow
           post :unfollow
           post :transfer
+          post :add_tag
+          post :destroy_tag
         end
       end
       namespace :users do
