@@ -12,4 +12,7 @@ json.articles @articles do |article|
   json.writer do
     json.(article.writer, :id, :username, :name, :profile_image_uri)
   end
+  json.tags article.tags do |tag|
+    json.tag tag.name
+  end
 end
