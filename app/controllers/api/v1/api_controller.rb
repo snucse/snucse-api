@@ -43,4 +43,10 @@ class Api::V1::ApiController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound do |exception|
     render status: :not_found, json: {}
   end
+
+  rescue_from ActiveRecord::RecordInvalid do |exception|
+    render status: :bad_request, json: {
+      errors: exception.record.errors.messages
+    }
+  end
 end
