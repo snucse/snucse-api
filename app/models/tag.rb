@@ -1,6 +1,8 @@
 class Tag < ActiveRecord::Base
-  has_and_belongs_to_many :articles, -> { distinct }
-  has_and_belongs_to_many :profiles, -> { distinct }
+  has_many :article_tags
+  has_many :articles, through: :article_tags
+  has_many :profile_tags
+  has_many :profiles, through: :profile_tags
 
   def self.find_by_name(name)
     tag = super
