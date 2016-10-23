@@ -47,7 +47,7 @@ class Api::V1::UsersControllerTest < ActionController::TestCase
     post :sign_in, username: "admin", password: "admin"
     assert_response :success
     response = JSON.parse @response.body
-    api_key = ApiKey.where(access_token: response["access_token"]).first
+    api_key = ApiKey.where(access_token: response["accessToken"]).first
     assert_not_nil api_key
     assert_equal api_key.user.username, "admin"
     assert_nil api_key.revoked_at

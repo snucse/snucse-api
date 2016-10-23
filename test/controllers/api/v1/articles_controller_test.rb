@@ -47,7 +47,7 @@ class Api::V1::ArticlesControllerTest < ActionController::TestCase
       end
     end
     profile_id = Profile.last.sid
-    get :index, profile_id: profile_id, format: :json
+    get :index, profileId: profile_id, format: :json
     assert_response :success
     response = JSON.parse @response.body
     assert response["articles"].all? {|x| x["profiles"].map{|y| y["id"]}.include? profile_id}
@@ -66,9 +66,9 @@ class Api::V1::ArticlesControllerTest < ActionController::TestCase
     profile_ids = [Profile.last.sid].join(",")
     post :create, title: "title", content: "content"
     assert_response :bad_request
-    post :create, profile_ids: profile_ids, content: "content"
+    post :create, profileIds: profile_ids, content: "content"
     assert_response :bad_request
-    post :create, profile_ids: profile_ids, title: "title"
+    post :create, profileIds: profile_ids, title: "title"
     assert_response :bad_request
   end
 
@@ -77,7 +77,7 @@ class Api::V1::ArticlesControllerTest < ActionController::TestCase
     profile_ids = [Profile.last.sid].join(",")
     title = "titletitle"
     content = "contentcontent"
-    post :create, profile_ids: profile_ids, title: title, content: content, format: :json
+    post :create, profileIds: profile_ids, title: title, content: content, format: :json
     assert_response :success
     response = JSON.parse @response.body
     article = Article.find(response["id"])
@@ -87,7 +87,7 @@ class Api::V1::ArticlesControllerTest < ActionController::TestCase
 
   test "[articles#create] 프로필 ID를 지정하지 않은 경우 실패" do
     set_access_token
-    post :create, profile_ids: "", title: "title", content: "content", format: :json
+    post :create, profileIds: "", title: "title", content: "content", format: :json
     assert_response :bad_request
   end
 

@@ -10,7 +10,7 @@ class Api::V1::CommentsControllerTest < ActionController::TestCase
   test "[comments#list] 댓글 목록을 가져옴" do
     set_access_token
     article = Article.last
-    get :index, article_id: article.id, format: :json
+    get :index, articleId: article.id, format: :json
     assert_response :success
     response = JSON.parse @response.body
     assert_equal response["comments"].size, article.comments.size
@@ -38,7 +38,7 @@ class Api::V1::CommentsControllerTest < ActionController::TestCase
     set_access_token
     article = Article.last
     content = "contentcontent"
-    post :create, article_id: article.id, content: content, format: :json
+    post :create, articleId: article.id, content: content, format: :json
     assert_response :success
     response = JSON.parse @response.body
     comment = Comment.find(response["id"])
