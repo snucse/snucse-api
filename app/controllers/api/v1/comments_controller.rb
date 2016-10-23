@@ -27,7 +27,7 @@ class Api::V1::CommentsController < Api::V1::ApiController
       "id": 1,
       "username": "writer",
       "name": "작성자",
-      "profileImageUrl": "http://placehold.it/100x100"
+      "profileImageUri": "http://placehold.it/100x100"
     }
   }
   EOS
