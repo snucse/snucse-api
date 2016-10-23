@@ -43,13 +43,13 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   }
   EOS
   def show
-    @profile = Profile.find_by_sid params[:id]
+    @profile = Profile.find_by_sid! params[:id]
     @following = Follow.where(profile_id: @profile.id, user_id: @user.id).any?
   end
 
   api! "프로필을 팔로우한다."
   def follow
-    profile_id = Profile.find_by_sid(params[:id]).id
+    profile_id = Profile.find_by_sid!(params[:id]).id
     Follow.create(
       user_id: @user.id,
       profile_id: profile_id
@@ -59,7 +59,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
 
   api! "프로필을 팔로우 취소한다."
   def unfollow
-    profile_id = Profile.find_by_sid(params[:id]).id
+    profile_id = Profile.find_by_sid!(params[:id]).id
     Follow.where(
       user_id: @user.id,
       profile_id: profile_id
@@ -95,7 +95,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   param :description, String, desc: "프로필 대문에 표시될 내용", required: true
   error code: 401, desc: "자신이 관리자가 아닌 프로필을 수정하려고 하는 경우"
   def update
-    @profile = Profile.find_by_sid params[:id]
+    @profile = Profile.find_by_sid! params[:id]
     if @user != @profile.admin
       render_unauthorized and return
     end
@@ -113,7 +113,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   param :adminId, Integer, desc: "새로운 관리자의 ID", required: true
   error code: 401, desc: "자신이 관리자가 아닌 프로필을 수정하려고 하는 경우"
   def transfer
-    @profile = Profile.find_by_sid params[:id]
+    @profile = Profile.find_by_sid! params[:id]
     if @user != @profile.admin
       render_unauthorized and return
     end
@@ -129,7 +129,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   api! "프로필에 태그를 추가한다."
   param :tag, String, desc: "추가할 태그", required: true
   def add_tag
-    @profile = Profile.find_by_sid params[:id]
+    @profile = Profile.find_by_sid! params[:id]
     tag = Tag.create_with(creator_id: @user.id).find_or_create_by(name: params[:tag])
     ProfileTag.create!(
       profile_id: @profile.id,
@@ -142,8 +142,8 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   api! "프로필에서 태그를 삭제한다."
   param :tag, String, desc: "삭제할 태그", required: true
   def destroy_tag
-    @profile = Profile.find_by_sid params[:id]
-    tag = Tag.find_by_name params[:tag]
+    @profile = Profile.find_by_sid! params[:id]
+    tag = Tag.find_by_name! params[:tag]
     @profile.tags.destroy tag
     render :show
   end

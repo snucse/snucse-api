@@ -13,6 +13,6 @@ class Api::V1::TagsController < Api::V1::ApiController
   }
   EOS
   def show
-    @tag = Tag.find_by_name params[:tag]
+    @tag = Tag.find_by_name! params[:tag]
   end
 end

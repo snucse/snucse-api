@@ -11,7 +11,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   EOS
   def index
     @articles = Article.all.includes(:profiles, :writer)
-    @articles = Profile.find_by_sid(params[:profileId]).articles.includes(:profiles, :writer) if params[:profileId]
+    @articles = Profile.find_by_sid!(params[:profileId]).articles.includes(:profiles, :writer) if params[:profileId]
   end
 
   api! "글을 조회한다."
@@ -46,7 +46,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   param :title, String, desc: "글 제목", required: true
   param :content, String, desc: "글 내용", required: true
   def create
-    profile_ids = params[:profileIds].split(",").map {|sid| Profile.find_by_sid(sid).id}
+    profile_ids = params[:profileIds].split(",").map {|sid| Profile.find_by_sid!(sid).id}
     render json: {}, status: :bad_request and return if profile_ids.empty?
     @article = Article.new(
       writer_id: @user.id,
@@ -108,7 +108,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   param :tag, String, desc: "삭제할 태그", required: true
   def destroy_tag
     @article = Article.find params[:id]
-    tag = Tag.find_by_name params[:tag]
+    tag = Tag.find_by_name! params[:tag]
     @article.tags.destroy tag
     render :show
   end

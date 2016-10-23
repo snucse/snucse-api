@@ -3,10 +3,4 @@ class Profile < ActiveRecord::Base
   has_and_belongs_to_many :articles
   has_many :profile_tags
   has_many :tags, through: :profile_tags
-
-  def self.find_by_sid(sid)
-    profile = super
-    raise ActiveRecord::RecordNotFound if profile.nil?
-    profile
-  end
 end
