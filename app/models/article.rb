@@ -7,4 +7,5 @@ class Article < ActiveRecord::Base
   has_one :last_comment, -> { order id: :desc }, class_name: Comment
 
   default_scope { order id: :desc }
+  default_scope { includes article_tags: [:tag, :writer] }
 end
