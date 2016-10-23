@@ -30,7 +30,11 @@ class Api::V1::ArticlesController < Api::V1::ApiController
       "username": "writer",
       "name": "작성자",
       "profileImageUrl": "http://placehold.it/100x100"
-    }
+    },
+    "tags": [
+      {"tag": "태그", "writer": {...}},
+      ...
+    ]
   }
   EOS
   def show

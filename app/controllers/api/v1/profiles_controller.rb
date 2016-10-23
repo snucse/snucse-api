@@ -35,7 +35,11 @@ class Api::V1::ProfilesController < Api::V1::ApiController
       "id": 1,
       "username": "admin",
       "name": "관리자"
-    }
+    },
+    "tags": [
+      {"tag": "태그", "writer": {...}},
+      ...
+    ]
   }
   EOS
   def show
