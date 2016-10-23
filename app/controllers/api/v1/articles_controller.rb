@@ -91,8 +91,12 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   param :tag, String, desc: "추가할 태그", required: true
   def add_tag
     @article = Article.find params[:id]
-    tag = Tag.find_or_create_by(name: params[:tag])
-    @article.tags << tag
+    tag = Tag.create_with(creator_id: @user.id).find_or_create_by(name: params[:tag])
+    ArticleTag.create!(
+      article_id: @article.id,
+      tag_id: tag.id,
+      writer_id: @user.id
+    )
     render :show
   end
 

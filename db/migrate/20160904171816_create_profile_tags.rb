@@ -3,6 +3,7 @@ class CreateProfileTags < ActiveRecord::Migration
     create_table :profile_tags do |t|
       t.integer :profile_id, null: false
       t.integer :tag_id, null: false
+      t.integer :writer_id, null: false
 
       t.timestamps null: false
     end

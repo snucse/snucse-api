@@ -11,6 +11,9 @@ end
 json.writer do
   json.(@article.writer, :id, :username, :name, :profile_image_uri)
 end
-json.tags @article.tags do |tag|
-  json.tag tag.name
+json.tags @article.article_tags do |tag|
+  json.tag tag.tag.name
+  json.writer do
+    json.(tag.writer, :id, :username, :name, :profile_image_uri)
+  end
 end

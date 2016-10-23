@@ -126,8 +126,12 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   param :tag, String, desc: "추가할 태그", required: true
   def add_tag
     @profile = Profile.find_by_sid params[:id]
-    tag = Tag.find_or_create_by(name: params[:tag])
-    @profile.tags << tag
+    tag = Tag.create_with(creator_id: @user.id).find_or_create_by(name: params[:tag])
+    ProfileTag.create!(
+      profile_id: @profile.id,
+      tag_id: tag.id,
+      writer_id: @user.id
+    )
     render :show
   end
 

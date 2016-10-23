@@ -4,7 +4,10 @@ json.profiles @profiles do |profile|
   json.admin do
     json.(profile.admin, :id, :username, :name)
   end
-  json.tags profile.tags do |tag|
-    json.tag tag.name
+  json.tags profile.profile_tags do |tag|
+    json.tag tag.tag.name
+    json.writer do
+      json.(tag.writer, :id, :username, :name, :profile_image_uri)
+    end
   end
 end
