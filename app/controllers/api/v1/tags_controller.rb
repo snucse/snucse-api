@@ -1,4 +1,17 @@
 class Api::V1::TagsController < Api::V1::ApiController
+  api! "태그 목록을 전달한다."
+  example <<-EOS
+  {
+    "tags": [
+      {"tag": "tag", "creator": {}},
+      ...
+    ]
+  }
+  EOS
+  def index
+    @tags = Tag.all.includes(:creator)
+  end
+
   api! "태그의 정보를 전달한다."
   example <<-EOS
   {
