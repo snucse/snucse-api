@@ -5,6 +5,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :password_digest
       t.string :name
       t.string :profile_image_uri
+      t.string :legacy_password_digest
 
       t.timestamps null: false
     end

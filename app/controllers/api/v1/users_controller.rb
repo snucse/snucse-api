@@ -11,7 +11,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   EOS
   def sign_in
     user = User.where(username: params[:username]).first
-    if user and user.authenticate(params[:password])
+    if user and user.check_password(params[:password])
       api_key = ApiKey.create(
         user_id: user.id
       )
