@@ -13,4 +13,8 @@ class Article < ActiveRecord::Base
 
   default_scope { order id: :desc }
   default_scope { includes article_tags: [:tag, :writer] }
+
+  def anonymous?
+    self.writer_id.nil?
+  end
 end

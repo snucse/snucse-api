@@ -1,5 +1,6 @@
 json.articles @articles do |article|
   json.(article, :id, :title, :content)
+  json.anonymous article.anonymous?
   json.created_at do
     json.date article.created_at.strftime("%Y%m%d")
     json.time article.created_at.strftime("%H:%M:%S")
@@ -10,7 +11,11 @@ json.articles @articles do |article|
     json.id profile.sid
   end
   json.writer do
-    json.(article.writer, :id, :username, :name, :profile_image_uri)
+    if article.anonymous?
+      json.name article.anonymous_name
+    else
+      json.(article.writer, :id, :username, :name, :profile_image_uri)
+    end
   end
   json.tags article.article_tags do |tag|
     json.tag tag.tag.name
