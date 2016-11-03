@@ -35,3 +35,9 @@ json.profiles @tag.profiles do |profile|
     end
   end
 end
+json.related_tags @tag.tag_relations do |tag_relation|
+  json.tag tag_relation.related_tag.name
+  json.writer do
+    json.(tag_relation.writer, :id, :username, :name, :profile_image_uri)
+  end
+end

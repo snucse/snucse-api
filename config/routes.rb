@@ -26,7 +26,12 @@ Rails.application.routes.draw do
         post :sign_up
         get :me
       end
-      resources :tags, only: [:index, :show], param: :tag
+      resources :tags, only: [:index, :show], param: :tag do
+        member do
+          post :add_related_tag
+          post :destroy_related_tag
+        end
+      end
       resources :feeds, only: :index
     end
   end

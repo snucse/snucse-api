@@ -28,10 +28,50 @@ class Api::V1::TagsController < Api::V1::ApiController
     "profiles": [
       {"id": 1, "name": "13학번 모임", ...},
       ...
+    ],
+    "relatedTags": [
+      {"tag": "관련태그", "writer": {...}},
+      ...
     ]
   }
   EOS
   def show
     @tag = Tag.find_by_name! params[:tag]
+  end
+
+  api! "연관 태그를 추가한다."
+  param :related_tag, String, desc: "추가할 연관 태그", required: true
+  def add_related_tag
+    @tag = Tag.find_by_name! params[:tag]
+    related_tag = Tag.find_by_name! params[:related_tag]
+    TagRelation.create!(
+      tag_id: @tag.id,
+      related_tag_id: related_tag.id,
+      writer_id: @user.id
+    )
+    TagRelation.create!(
+      tag_id: related_tag.id,
+      related_tag_id: @tag.id,
+      writer_id: @user.id
+    )
+    @tag.reload
+    render :show
+  end
+
+  api! "연관 태그를 삭제한다."
+  param :related_tag, String, desc: "삭제할 연관 태그", required: true
+  def destroy_related_tag
+    @tag = Tag.find_by_name! params[:tag]
+    related_tag = Tag.find_by_name! params[:related_tag]
+    TagRelation.where(
+      tag_id: @tag.id,
+      related_tag_id: related_tag.id
+    ).destroy_all
+    TagRelation.where(
+      tag_id: related_tag.id,
+      related_tag_id: @tag.id
+    ).destroy_all
+    @tag.reload
+    render :show
   end
 end
