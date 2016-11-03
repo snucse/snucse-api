@@ -136,6 +136,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
       tag_id: tag.id,
       writer_id: @user.id
     )
+    @profile.reload
     render :show
   end
 

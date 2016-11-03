@@ -101,6 +101,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
       tag_id: tag.id,
       writer_id: @user.id
     )
+    @article.reload
     render :show
   end
 
