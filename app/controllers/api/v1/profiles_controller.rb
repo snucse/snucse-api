@@ -131,6 +131,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   def add_tag
     @profile = Profile.find_by_sid! params[:id]
     tag = Tag.create_with(creator_id: @user.id).find_or_create_by(name: params[:tag])
+    tag.update_attributes(active: true)
     ProfileTag.create!(
       profile_id: @profile.id,
       tag_id: tag.id,
@@ -146,6 +147,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
     @profile = Profile.find_by_sid! params[:id]
     tag = Tag.find_by_name! params[:tag]
     @profile.tags.destroy tag
+    tag.check_and_deactivate
     render :show
   end
 end

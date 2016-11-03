@@ -96,6 +96,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   def add_tag
     @article = Article.find params[:id]
     tag = Tag.create_with(creator_id: @user.id).find_or_create_by(name: params[:tag])
+    tag.update_attributes(active: true)
     ArticleTag.create!(
       article_id: @article.id,
       tag_id: tag.id,
@@ -111,6 +112,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
     @article = Article.find params[:id]
     tag = Tag.find_by_name! params[:tag]
     @article.tags.destroy tag
+    tag.check_and_deactivate
     render :show
   end
 end

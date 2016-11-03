@@ -9,7 +9,7 @@ class Api::V1::TagsController < Api::V1::ApiController
   }
   EOS
   def index
-    @tags = Tag.all.includes(:creator)
+    @tags = Tag.where(active: true).includes(:creator)
   end
 
   api! "태그의 정보를 전달한다."
