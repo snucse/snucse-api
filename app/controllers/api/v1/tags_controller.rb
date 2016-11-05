@@ -40,10 +40,10 @@ class Api::V1::TagsController < Api::V1::ApiController
   end
 
   api! "연관 태그를 추가한다."
-  param :related_tag, String, desc: "추가할 연관 태그", required: true
+  param :relatedTag, String, desc: "추가할 연관 태그", required: true
   def add_related_tag
     @tag = Tag.find_by_name! params[:tag]
-    related_tag = Tag.find_by_name! params[:related_tag]
+    related_tag = Tag.find_by_name! params[:relatedTag]
     TagRelation.create!(
       tag_id: @tag.id,
       related_tag_id: related_tag.id,
@@ -59,10 +59,10 @@ class Api::V1::TagsController < Api::V1::ApiController
   end
 
   api! "연관 태그를 삭제한다."
-  param :related_tag, String, desc: "삭제할 연관 태그", required: true
+  param :relatedTag, String, desc: "삭제할 연관 태그", required: true
   def destroy_related_tag
     @tag = Tag.find_by_name! params[:tag]
-    related_tag = Tag.find_by_name! params[:related_tag]
+    related_tag = Tag.find_by_name! params[:relatedTag]
     TagRelation.where(
       tag_id: @tag.id,
       related_tag_id: related_tag.id
