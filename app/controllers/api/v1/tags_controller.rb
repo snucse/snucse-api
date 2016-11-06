@@ -1,5 +1,6 @@
 class Api::V1::TagsController < Api::V1::ApiController
   api! "태그 목록을 전달한다."
+  param :prefix, String, desc: "설정된 경우 해당 문자열로 시작하는 태그만 전달한다.", required: false
   example <<-EOS
   {
     "tags": [
@@ -10,6 +11,7 @@ class Api::V1::TagsController < Api::V1::ApiController
   EOS
   def index
     @tags = Tag.where(active: true).includes(:creator)
+    @tags = @tags.where("name like ?", "#{params[:prefix]}%") if params[:prefix]
   end
 
   api! "태그의 정보를 전달한다."
