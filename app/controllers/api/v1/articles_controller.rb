@@ -1,6 +1,10 @@
 class Api::V1::ArticlesController < Api::V1::ApiController
+  DEFAULT_LIMIT = 10
   api! "글 목록을 전달한다."
   param :profileId, String, desc: "설정된 경우 특정 프로필의 글만 전달한다.", required: false
+  param :sinceId, Integer, desc: "설정된 경우 ID가 이 값보다 큰 결과만 보낸다.", required: false
+  param :maxId, Integer, desc: "설정된 경우 ID가 이 값 이하인 결과만 보낸다.", required: false
+  param :limit, Integer, desc: "결과의 최대 개수, 기본값은 10이다.", required: false
   example <<-EOS
   {
     "articles": [
@@ -10,8 +14,11 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   }
   EOS
   def index
-    @articles = Article.all.includes(:profiles, :writer)
+    limit = params[:limit] || DEFAULT_LIMIT
+    @articles = Article.all.includes(:profiles, :writer).limit(limit)
     @articles = Profile.find_by_sid!(params[:profileId]).articles.includes(:profiles, :writer) if params[:profileId]
+    @articles = @articles.where("id > ?", params[:sinceId]) if params[:sinceId]
+    @articles = @articles.where("id <= ?", params[:maxId]) if params[:maxId]
   end
 
   api! "글을 조회한다."

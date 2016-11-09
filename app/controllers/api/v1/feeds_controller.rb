@@ -1,5 +1,9 @@
 class Api::V1::FeedsController < Api::V1::ApiController
+  DEFAULT_LIMIT = 10
   api! "피드 목록을 전달한다."
+  param :sinceId, Integer, desc: "설정된 경우 ID가 이 값보다 큰 결과만 보낸다.", required: false
+  param :maxId, Integer, desc: "설정된 경우 ID가 이 값 이하인 결과만 보낸다.", required: false
+  param :limit, Integer, desc: "결과의 최대 개수, 기본값은 10이다.", required: false
   example <<-EOS
   {
     "feeds": [
@@ -9,6 +13,9 @@ class Api::V1::FeedsController < Api::V1::ApiController
   }
   EOS
   def index
-    @feeds = @user.feeds.includes(:profiles, :writer, :last_comment).order(id: :desc)
+    limit = params[:limit] || DEFAULT_LIMIT
+    @feeds = @user.feeds.includes(:profiles, :writer, :last_comment).order(id: :desc).limit(limit)
+    @feeds = @feeds.where("articles.id > ?", params[:sinceId]) if params[:sinceId]
+    @feeds = @feeds.where("articles.id <= ?", params[:maxId]) if params[:maxId]
   end
 end
