@@ -6,6 +6,6 @@ class User < ActiveRecord::Base
   has_many :favorite_articles
   has_many :favorites, through: :favorite_articles, source: :article
   validates_uniqueness_of :username
-  has_many :feeds, through: :groups, source: :articles
+  has_many :feeds, through: :profiles, source: :articles
   validates :password_digest, presence: true, if: "legacy_password_digest.nil?"
 end

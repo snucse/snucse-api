@@ -9,6 +9,6 @@ class Api::V1::FeedsController < Api::V1::ApiController
   }
   EOS
   def index
-    @feeds = @user.feeds.includes(:group, :writer, :last_comment).order(id: :desc)
+    @feeds = @user.feeds.includes(:profiles, :writer, :last_comment).order(id: :desc)
   end
 end
