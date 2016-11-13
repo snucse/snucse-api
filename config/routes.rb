@@ -28,6 +28,7 @@ Rails.application.routes.draw do
       end
       namespace :tags do
         get "", to: :index
+        get :recent
         get :show
         post :add_related_tag
         post :destroy_related_tag

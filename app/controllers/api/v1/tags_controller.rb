@@ -14,6 +14,28 @@ class Api::V1::TagsController < Api::V1::ApiController
     @tags = @tags.where("name like ?", "#{params[:prefix]}%") if params[:prefix]
   end
 
+  api! "최근에 등록된 태그 목록을 전달한다."
+  param :offset, Integer, desc: "태그 등록 내역을 검색할 날짜 수, 기본값은 7", required: false
+  example <<-EOS
+  {
+    "tags": [
+      {"tag": "tag", "creator": {...}, "count": 123},
+      ...
+    ]
+  }
+  EOS
+  def recent
+    offset = params[:offset].to_i
+    offset = 7 if offset == 0
+    @tag_count = Hash.new 0
+    ArticleTag.where("created_at > ?", Time.now - offset.days).includes(:tag).each do |article_tag|
+      @tag_count[article_tag.tag] += 1
+    end
+    ProfileTag.where("created_at > ?", Time.now - offset.days).includes(:tag).each do |profile_tag|
+      @tag_count[profile_tag.tag] += 1
+    end
+  end
+
   api! "태그의 정보를 전달한다."
   param :tag, String, desc: "태그", required: true
   example <<-EOS
