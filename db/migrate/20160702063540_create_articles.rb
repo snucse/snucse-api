@@ -7,6 +7,7 @@ class CreateArticles < ActiveRecord::Migration
       t.string :anonymous_name
       t.string :password_digest
       t.string :legacy_password_digest
+      t.integer :comment_count, default: 0
 
       t.timestamps null: false
     end
