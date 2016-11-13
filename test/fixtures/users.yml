@@ -2,8 +2,10 @@ admin:
   username: "admin"
   password_digest: "$2a$10$MaxMvfjOdjr5wx0PfqgBwOZuNkyV5kQI.4gOtoZLar3LkDbpyzmxe" # digest of "admin"
   name: "관리자"
+  level: 2
 
 other:
   username: "other"
   password_digest: "$2a$10$.hpXfbEXLd08IT1hR8ZSMOebXRQevUPhfejg3UJzojNkoK7Wogcv2" # digest of "other"
   name: "다른사람"
+  level: 2

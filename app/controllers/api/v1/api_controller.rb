@@ -1,7 +1,7 @@
 class Api::V1::ApiController < ApplicationController
   extend ParameterValidator
   skip_before_action :verify_authenticity_token
-  before_action :check_api_key
+  before_action :check_api_key, :check_user_level
 
   def check_api_key
     authenticate_or_request_with_http_token do |token, options|
@@ -16,6 +16,10 @@ class Api::V1::ApiController < ApplicationController
       end
       @user = api_key.user rescue nil
     end
+  end
+
+  def check_user_level
+    render json: {}, status: :forbidden unless @user and @user.active?
   end
 
   def render_unauthorized

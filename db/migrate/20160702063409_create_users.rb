@@ -6,6 +6,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :name
       t.string :profile_image_uri
       t.string :legacy_password_digest
+      t.integer :level, default: 0
 
       t.timestamps null: false
     end

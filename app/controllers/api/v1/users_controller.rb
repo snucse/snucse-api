@@ -1,5 +1,6 @@
 class Api::V1::UsersController < Api::V1::ApiController
   skip_before_action :check_api_key, only: [:sign_in, :sign_up]
+  skip_before_action :check_user_level
   api! "인증 후 access token을 전달한다."
   param :username, String, desc: "사용자의 계정명(아이디)", required: true
   param :password, String, desc: "사용자의 비밀번호", required: true

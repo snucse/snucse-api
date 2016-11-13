@@ -1,4 +1,5 @@
 class Api::V1::FeedsController < Api::V1::ApiController
+  skip_before_action :check_user_level
   DEFAULT_LIMIT = 10
   api! "피드 목록을 전달한다."
   param :sinceId, Integer, desc: "설정된 경우 ID가 이 값보다 큰 결과만 보낸다.", required: false

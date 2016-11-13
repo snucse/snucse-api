@@ -1,4 +1,7 @@
 class Api::V1::CommentsController < Api::V1::ApiController
+  include AccessControl
+  skip_before_action :check_user_level
+
   api! "댓글 목록을 전달한다."
   param :articleId, Integer, desc: "댓글 목록을 가져올 글의 ID", required: true
   example <<-EOS
@@ -10,6 +13,8 @@ class Api::V1::CommentsController < Api::V1::ApiController
   }
   EOS
   def index
+    article = Article.find(params[:articleId])
+    check_article(article)
     @comments = Comment.where(article_id: params[:articleId]).includes(:writer)
   end
 
@@ -33,12 +38,15 @@ class Api::V1::CommentsController < Api::V1::ApiController
   EOS
   def show
     @comment = Comment.find params[:id]
+    check_comment(@comment)
   end
 
   api! "댓글을 생성한다."
   param :articleId, Integer, desc: "댓글이 작성되는 글의 ID", required: true
   param :content, String, desc: "댓글 내용", required: true
   def create
+    article = Article.find(params[:articleId])
+    check_article(article)
     @comment = Comment.new(
       writer_id: @user.id,
       article_id: params[:articleId],

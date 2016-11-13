@@ -1,4 +1,7 @@
 class Api::V1::ArticlesController < Api::V1::ApiController
+  include AccessControl
+  skip_before_action :check_user_level, only: [:index, :show, :create, :update, :destroy]
+
   DEFAULT_LIMIT = 10
   api! "글 목록을 전달한다."
   param :profileId, String, desc: "설정된 경우 특정 프로필의 글만 전달한다.", required: false
@@ -46,6 +49,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   EOS
   def show
     @article = Article.find params[:id]
+    check_article(@article)
   end
 
   api! "글을 생성한다."
@@ -53,7 +57,9 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   param :title, String, desc: "글 제목", required: true
   param :content, String, desc: "글 내용", required: true
   def create
-    profile_ids = params[:profileIds].split(",").map {|sid| Profile.find_by_sid!(sid).id}
+    profiles = params[:profileIds].split(",").map {|sid| Profile.find_by_sid!(sid)}
+    profiles.each{|profile| check_profile(profile)}
+    profile_ids = profiles.map(&:id)
     render json: {}, status: :bad_request and return if profile_ids.empty?
     @article = Article.new(
       writer_id: @user.id,

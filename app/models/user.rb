@@ -8,4 +8,11 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :username
   has_many :feeds, through: :profiles, source: :articles
   validates :password_digest, presence: true, if: "legacy_password_digest.nil?"
+
+  LEVEL_ASSOCIATE = 1
+  LEVEL_ACTIVE = 2
+
+  def active?
+    self.level == LEVEL_ACTIVE
+  end
 end
