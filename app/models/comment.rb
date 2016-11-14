@@ -1,5 +1,7 @@
 class Comment < ActiveRecord::Base
   include LegacyPassword
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
   belongs_to :writer, class_name: User
   belongs_to :article, counter_cache: :comment_count
 

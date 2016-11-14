@@ -1,5 +1,7 @@
 class Article < ActiveRecord::Base
   include LegacyPassword
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
   belongs_to :writer, class_name: User
   has_and_belongs_to_many :profiles
   has_many :article_tags

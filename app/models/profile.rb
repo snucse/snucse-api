@@ -1,4 +1,6 @@
 class Profile < ActiveRecord::Base
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
   belongs_to :admin, class_name: User
   has_and_belongs_to_many :articles
   has_many :profile_tags

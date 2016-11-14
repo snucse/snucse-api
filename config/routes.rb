@@ -33,6 +33,13 @@ Rails.application.routes.draw do
         post :add_related_tag
         post :destroy_related_tag
       end
+      namespace :search do
+        get "", to: :index
+        get :article
+        get :comment
+        get :profile
+        get :tag
+      end
       resources :feeds, only: :index
     end
   end
