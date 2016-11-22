@@ -69,7 +69,7 @@ class Api::V1::TagsController < Api::V1::ApiController
   param :relatedTag, String, desc: "추가할 연관 태그", required: true
   def add_related_tag
     @tag = Tag.find_by_name! params[:tag]
-    related_tag = Tag.find_by_name! params[:relatedTag]
+    related_tag = Tag.create_with(creator_id: @user.id).find_or_create_by(name: params[:relatedTag])
     TagRelation.create!(
       tag_id: @tag.id,
       related_tag_id: related_tag.id,
