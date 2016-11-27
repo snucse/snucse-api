@@ -1,4 +1,4 @@
-json.(@comment, :id, :content)
+json.(@comment, :id, :content, :recommendation_count)
 json.anonymous @comment.anonymous?
 json.created_at do
   json.date @comment.created_at.strftime("%Y%m%d")

@@ -1,5 +1,5 @@
 json.articles @articles do |article|
-  json.(article, :id, :title, :content)
+  json.(article, :id, :title, :content, :recommendation_count)
   json.created_at do
     json.date article.created_at.strftime("%Y%m%d")
     json.time article.created_at.strftime("%H:%M:%S")
@@ -20,7 +20,7 @@ json.articles @articles do |article|
   end
 end
 json.comments @comments do |comment|
-  json.(comment, :id, :content, :article_id)
+  json.(comment, :id, :content, :article_id, :recommendation_count)
   json.anonymous comment.anonymous?
   json.created_at do
     json.date comment.created_at.strftime("%Y%m%d")

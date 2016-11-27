@@ -1,6 +1,6 @@
 json.feeds @feeds do |feed|
   json.type "article"
-  json.(feed, :id, :title, :content, :comment_count)
+  json.(feed, :id, :title, :content, :comment_count, :recommendation_count)
   json.anonymous feed.anonymous?
   json.created_at do
     json.date feed.created_at.strftime("%Y%m%d")
@@ -22,7 +22,7 @@ json.feeds @feeds do |feed|
     if feed.last_comment.nil?
       json.null!
     else
-      json.(feed.last_comment, :id, :content)
+      json.(feed.last_comment, :id, :content, :recommendation_count)
       json.created_at do
         json.date feed.last_comment.created_at.strftime("%Y%m%d")
         json.time feed.last_comment.created_at.strftime("%H:%M:%S")

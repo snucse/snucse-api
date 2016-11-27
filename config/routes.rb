@@ -6,9 +6,14 @@ Rails.application.routes.draw do
         member do
           post :add_tag
           post :destroy_tag
+          post :recommend
         end
       end
-      resources :comments
+      resources :comments do
+        member do
+          post :recommend
+        end
+      end
       resources :profiles, except: :destroy do
         collection do
           get :following

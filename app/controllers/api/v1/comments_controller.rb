@@ -86,4 +86,19 @@ class Api::V1::CommentsController < Api::V1::ApiController
     @comment.destroy
     head :no_content
   end
+
+  api! "댓글을 추천한다."
+  error code: 400, desc: "이미 추천한 글을 다시 추천하려는 경우(1일 1회 제한)"
+  def recommend
+    @comment = Comment.find params[:id]
+    key = "recommendation:comment:#{@article.id}:#{@user.id}"
+    if $redis.exists(key)
+      render json: {}, status: :bad_request and return
+    end
+    $redis.set(key, "on")
+    expire = DateTime.now.beginning_of_day.to_i + 60 * 60 * 24
+    $redis.expireat(key, expire)
+    @comment.increment(:recommendation_count).save
+    render json: {}
+  end
 end
