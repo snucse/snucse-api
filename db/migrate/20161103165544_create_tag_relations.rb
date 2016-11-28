@@ -3,7 +3,7 @@ class CreateTagRelations < ActiveRecord::Migration
     create_table :tag_relations do |t|
       t.integer :tag_id, null: false
       t.integer :related_tag_id, null: false
-      t.integer :writer_id, null: false
+      t.integer :writer_id
 
       t.timestamps null: false
     end
