@@ -1,19 +1,4 @@
 json.comments do
   json.count @comments.total
-  json.data @comments do |comment|
-    json.(comment, :id, :content, :article_id, :recommendation_count)
-    json.anonymous comment.anonymous?
-    json.created_at do
-      json.date comment.created_at.strftime("%Y%m%d")
-      json.time comment.created_at.strftime("%H:%M:%S")
-      json.updated comment.created_at != comment.updated_at
-    end
-    json.writer do
-      if comment.anonymous?
-        json.name comment.anonymous_name
-      else
-        json.(comment.writer, :id, :username, :name, :profile_image_uri)
-      end
-    end
-  end
+  json.data @comments, partial: "models/comment", as: :comment
 end
