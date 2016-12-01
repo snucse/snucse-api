@@ -19,7 +19,7 @@ class Api::V1::SearchController < Api::V1::ApiController
     q = params[:q]
     page = params[:page] || 1
     limit = params[:limit] || 10
-    @articles = Article.search(q).per(limit).records
+    @articles = Article.search(q).page(page).per(limit).records
   end
 
   api! "댓글 검색 결과를 전달한다."
@@ -30,7 +30,7 @@ class Api::V1::SearchController < Api::V1::ApiController
     q = params[:q]
     page = params[:page] || 1
     limit = params[:limit] || 10
-    @comments = Comment.search(q).per(limit).records
+    @comments = Comment.search(q).page(page).per(limit).records
   end
 
   api! "프로필 검색 결과를 전달한다."
@@ -41,7 +41,7 @@ class Api::V1::SearchController < Api::V1::ApiController
     q = params[:q]
     page = params[:page] || 1
     limit = params[:limit] || 10
-    @profiles = Profile.search(q).per(limit).records
+    @profiles = Profile.search(q).page(page).per(limit).records
   end
 
   api! "태그 검색 결과를 전달한다."
@@ -52,6 +52,6 @@ class Api::V1::SearchController < Api::V1::ApiController
     q = params[:q]
     page = params[:page] || 1
     limit = params[:limit] || 10
-    @tags = Tag.search(q).per(limit).records
+    @tags = Tag.search(q).page(page).per(limit).records
   end
 end
