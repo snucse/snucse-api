@@ -26,6 +26,11 @@ Rails.application.routes.draw do
           post :destroy_tag
         end
       end
+      resources :profile_comments do
+        member do
+          post :recommend
+        end
+      end
       namespace :users do
         post :sign_in
         post :sign_up
