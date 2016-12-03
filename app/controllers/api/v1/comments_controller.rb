@@ -23,6 +23,7 @@ class Api::V1::CommentsController < Api::V1::ApiController
   {
     "id": 1,
     "content": "content",
+    "recommendationCount": 0,
     "createdAt": {
       "date": "20160801",
       "time": "01:23:45",
@@ -72,7 +73,7 @@ class Api::V1::CommentsController < Api::V1::ApiController
     )
       render :show
     else
-      render json: @comment.errors, sttatus: :bad_request
+      render json: @comment.errors, status: :bad_request
     end
   end
 
@@ -88,10 +89,10 @@ class Api::V1::CommentsController < Api::V1::ApiController
   end
 
   api! "댓글을 추천한다."
-  error code: 400, desc: "이미 추천한 글을 다시 추천하려는 경우(1일 1회 제한)"
+  error code: 400, desc: "이미 추천한 댓글을 다시 추천하려는 경우(1일 1회 제한)"
   def recommend
     @comment = Comment.find params[:id]
-    key = "recommendation:comment:#{@article.id}:#{@user.id}"
+    key = "recommendation:comment:#{@comment.id}:#{@user.id}"
     if $redis.exists(key)
       render json: {}, status: :bad_request and return
     end
