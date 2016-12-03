@@ -27,3 +27,5 @@ module Snucse
     Jbuilder.key_format camelize: :lower
   end
 end
+
+require 'carrierwave/orm/activerecord'
