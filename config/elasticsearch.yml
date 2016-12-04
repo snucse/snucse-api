@@ -1,0 +1,6 @@
+development:
+  host: "http://localhost:9200/"
+test:
+  host: "http://localhost:9200/"
+production:
+  host: "http://localhost:9200/"
