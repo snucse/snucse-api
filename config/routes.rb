@@ -51,6 +51,7 @@ Rails.application.routes.draw do
         get :tag
       end
       resources :feeds, only: :index
+      resources :files, only: :show
     end
   end
 end
