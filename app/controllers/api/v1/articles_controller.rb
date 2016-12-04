@@ -89,6 +89,8 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   api! "글을 수정한다."
   param :title, String, desc: "글 제목", required: true
   param :content, String, desc: "글 내용", required: true
+  param :fileIds, Array, of: Integer, desc: "기존 첨부파일 중 계속 첨부되는 파일의 ID, 여기에 포함되지 않는 파일은 삭제됨", required: true
+  param :files, Array, of: File, desc: "새로 추가되는 첨부파일의 목록", required: false
   error code: 401, desc: "자신이 작성하지 않은 글을 수정하려고 하는 경우"
   def update
     @article = Article.find params[:id]
@@ -99,6 +101,14 @@ class Api::V1::ArticlesController < Api::V1::ApiController
       title: params[:title],
       content: params[:content]
     )
+      @article.attachments.where.not(id: params[:fileIds]).destroy_all
+      params[:files].each do |file|
+        Attachment.create(
+          article_id: @article.id,
+          uploader_id: @user.id,
+          file: file
+        )
+      end
       render :show
     else
       render json: @article.errors, status: :bad_request
@@ -112,6 +122,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
     if @user != @article.writer
       render_unauthorized and return
     end
+    @article.attachments.destroy_all
     @article.destroy
     head :no_content
   end
