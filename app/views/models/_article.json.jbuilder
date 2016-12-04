@@ -16,4 +16,5 @@ json.writer do
     json.partial! "models/user", user: article.writer
   end
 end
+json.files article.attachments, partial: "models/attachment", as: :attachment
 json.tags article.article_tags, partial: "models/article_tag", as: :article_tag

@@ -8,6 +8,7 @@ class Article < ActiveRecord::Base
   has_many :tags, through: :article_tags
   has_many :comments
   has_one :last_comment, -> { order id: :desc }, class_name: Comment
+  has_many :attachments
 
   validates :anonymous_name, presence: true, if: "writer_id.nil?"
   has_secure_password validations: false

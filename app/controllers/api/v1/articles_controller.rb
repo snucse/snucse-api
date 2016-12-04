@@ -41,6 +41,10 @@ class Api::V1::ArticlesController < Api::V1::ApiController
       "name": "작성자",
       "profileImageUri": "http://placehold.it/100x100"
     },
+    "files": [
+      {"id": 1, "name": "image.jpg", "path": "/api/v1/files/1"},
+      ...
+    ],
     "tags": [
       {"tag": "태그", "writer": {...}},
       ...
@@ -56,6 +60,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   param :profileIds, String, desc: "글이 작성되는 프로필의 ID, ','로 연결된 문자열 목록", required: true
   param :title, String, desc: "글 제목", required: true
   param :content, String, desc: "글 내용", required: true
+  param :files, Array, of: File, desc: "첨부파일의 목록", required: false
   def create
     profiles = params[:profileIds].split(",").map {|sid| Profile.find_by_sid!(sid)}
     profiles.each{|profile| check_profile(profile)}
@@ -68,6 +73,13 @@ class Api::V1::ArticlesController < Api::V1::ApiController
       content: params[:content]
     )
     if @article.save
+      params[:files].each do |file|
+        Attachment.create(
+          article_id: @article.id,
+          uploader_id: @user.id,
+          file: file
+        )
+      end
       render :show, status: :created
     else
       render json: @article.errors, status: :bad_request
