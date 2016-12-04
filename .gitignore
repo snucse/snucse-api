@@ -43,3 +43,6 @@ Session.vim
 db/schema.rb
 
 uploads/
+
+config/redis.yml
+config/elasticsearch.yml
