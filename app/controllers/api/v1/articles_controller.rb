@@ -20,8 +20,8 @@ class Api::V1::ArticlesController < Api::V1::ApiController
     limit = params[:limit] || DEFAULT_LIMIT
     @articles = Article.all.includes(:profiles, :writer).limit(limit)
     @articles = Profile.find_by_sid!(params[:profileId]).articles.includes(:profiles, :writer) if params[:profileId]
-    @articles = @articles.where("id > ?", params[:sinceId]) if params[:sinceId]
-    @articles = @articles.where("id <= ?", params[:maxId]) if params[:maxId]
+    @articles = @articles.where("articles.id > ?", params[:sinceId]) if params[:sinceId]
+    @articles = @articles.where("articles.id <= ?", params[:maxId]) if params[:maxId]
   end
 
   api! "글을 조회한다."
