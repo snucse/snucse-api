@@ -19,7 +19,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   def index
     limit = params[:limit] || DEFAULT_LIMIT
     @articles = Article.all.includes(:profiles, :writer).limit(limit)
-    @articles = Profile.find_by_sid!(params[:profileId]).articles.includes(:profiles, :writer) if params[:profileId]
+    @articles = Profile.find_by_sid!(params[:profileId]).articles.includes(:profiles, :writer).limit(limit) if params[:profileId]
     @articles = @articles.where("articles.id > ?", params[:sinceId]) if params[:sinceId]
     @articles = @articles.where("articles.id <= ?", params[:maxId]) if params[:maxId]
   end
