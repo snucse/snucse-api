@@ -3,7 +3,7 @@ class Api::V1::ProfileCommentsController < Api::V1::ApiController
   skip_before_action :check_user_level
 
   api! "프로필 댓글 목록을 전달한다."
-  param :profileId, Integer, desc: "댓글 목록을 가져올 프로필의 ID", required: true
+  param :profileId, String, desc: "댓글 목록을 가져올 프로필의 ID", required: true
   example <<-EOS
   {
     "profileComments": [
@@ -13,7 +13,7 @@ class Api::V1::ProfileCommentsController < Api::V1::ApiController
   }
   EOS
   def index
-    profile = Profile.find(params[:profileId])
+    profile = Profile.find_by_sid! params[:profileId]
     check_profile(profile)
     @profile_comments = ProfileComment.where(profile_id: params[:profileId]).includes(:writer)
   end
@@ -43,10 +43,10 @@ class Api::V1::ProfileCommentsController < Api::V1::ApiController
   end
 
   api! "프로필 댓글을 생성한다."
-  param :profileId, Integer, desc: "댓글이 작성되는 프로필의 ID", required: true
+  param :profileId, String, desc: "댓글이 작성되는 프로필의 ID", required: true
   param :content, String, desc: "댓글 내용", required: true
   def create
-    profile = Profile.find(params[:profileId])
+    profile = Profile.find_by_sid! params[:profileId]
     check_profile(profile)
     @profile_comment = ProfileComment.new(
       writer_id: @user.id,
