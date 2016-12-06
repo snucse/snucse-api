@@ -35,6 +35,9 @@ Rails.application.routes.draw do
         post :sign_in
         post :sign_up
         get :me
+        get ':id/profile_image', to: :show_profile_image
+        post :profile_image, to: :upload_profile_image
+        delete :profile_image, to: :destroy_profile_image
       end
       namespace :tags do
         get "", to: :index

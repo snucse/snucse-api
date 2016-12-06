@@ -59,4 +59,34 @@ class Api::V1::UsersController < Api::V1::ApiController
   EOS
   def me
   end
+
+  api! "프로필 이미지를 조회한다."
+  error code: 404, desc: "설정된 프로필 이미지가 없을 때"
+  def show_profile_image
+    if params[:id] == "me"
+      user = @user
+    else
+      user = User.find params[:id]
+    end
+    if user.profile_image.file.nil?
+      render json: {}, status: :not_found and return
+    end
+    send_file(user.profile_image.url, disposition: "inline")
+  end
+
+  api! "자신의 프로필 이미지를 업로드한다."
+  param :image, File, desc: "프로필 이미지", required: true
+  def upload_profile_image
+    @user.update_attributes(
+      profile_image: params[:image]
+    )
+    render json: {}
+  end
+
+  api! "자신의 프로필 이미지를 삭제한다."
+  def destroy_profile_image
+    @user.remove_profile_image = true
+    @user.save
+    render json: {}
+  end
 end
