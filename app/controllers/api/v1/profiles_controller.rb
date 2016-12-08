@@ -91,18 +91,17 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   end
 
   api! "프로필을 수정한다."
-  param :name, String, desc: "프로필의 이름", required: true
-  param :description, String, desc: "프로필 대문에 표시될 내용", required: true
+  param :name, String, desc: "프로필의 이름", required: false
+  param :description, String, desc: "프로필 대문에 표시될 내용", required: false
   error code: 401, desc: "자신이 관리자가 아닌 프로필을 수정하려고 하는 경우"
   def update
     @profile = Profile.find_by_sid! params[:id]
     if @user != @profile.admin
       render_unauthorized and return
     end
-    if @profile.update(
-      name: params[:name],
-      description: params[:description]
-    )
+    @profile.name = params[:name] if params[:name]
+    @profile.description = params[:description] if params[:description]
+    if @profile.save
       render :show
     else
       render json: @profile.errors, status: :bad_request
