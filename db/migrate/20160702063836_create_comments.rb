@@ -3,6 +3,7 @@ class CreateComments < ActiveRecord::Migration
     create_table :comments do |t|
       t.integer :writer_id
       t.integer :article_id
+      t.integer :parent_comment_id
       t.text :content
       t.string :anonymous_name
       t.string :password_digest

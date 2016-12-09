@@ -10,6 +10,9 @@ Rails.application.routes.draw do
         end
       end
       resources :comments do
+        collection do
+          get :replies
+        end
         member do
           post :recommend
         end

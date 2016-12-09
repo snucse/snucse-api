@@ -7,7 +7,12 @@ class Api::V1::CommentsController < Api::V1::ApiController
   example <<-EOS
   {
     "comments": [
-      {"id": 1, "content": "content", ...},
+      {
+        "id": 1,
+        "content": "content",
+        "last_reply": {"id": 2, "content": "reply", ...},
+        ...
+      },
       ...
     ]
   }
@@ -15,7 +20,23 @@ class Api::V1::CommentsController < Api::V1::ApiController
   def index
     article = Article.find(params[:articleId])
     check_article(article)
-    @comments = Comment.where(article_id: params[:articleId]).includes(:writer)
+    @comments = Comment.where(article_id: params[:articleId], parent_comment_id: nil).includes(:writer, :last_reply)
+  end
+
+  api! "댓댓글 목록을 전달한다."
+  param :parentCommentId, Integer, desc: "부모 댓글의 ID", required: true
+  example <<-EOS
+  {
+    "comments": [
+      {"id": 1, "content": "content", ...},
+      ...
+    ]
+  }
+  EOS
+  def replies
+    comment = Comment.find(params[:parentCommentId])
+    check_article(comment.article)
+    @comments = comment.replies
   end
 
   api! "댓글을 조회한다."
@@ -44,6 +65,7 @@ class Api::V1::CommentsController < Api::V1::ApiController
 
   api! "댓글을 생성한다."
   param :articleId, Integer, desc: "댓글이 작성되는 글의 ID", required: true
+  param :parentCommentId, Integer, desc: "댓댓글인 경우, 부모 댓글의 ID", required: false
   param :content, String, desc: "댓글 내용", required: true
   def create
     article = Article.find(params[:articleId])
@@ -51,6 +73,7 @@ class Api::V1::CommentsController < Api::V1::ApiController
     @comment = Comment.new(
       writer_id: @user.id,
       article_id: params[:articleId],
+      parent_comment_id: params[:parentCommentId],
       content: params[:content]
     )
     if @comment.save
