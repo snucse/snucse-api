@@ -22,7 +22,7 @@ module LegacyPassword
     salt = self.legacy_password_digest[6..13].scan(/../).map{|x| x.to_i(16).chr}.join
     hash = self.legacy_password_digest[14..53].downcase
     password2 = password.split(//).map{|x| x + "\x00"}.join
-    if Digest::SHA512.new.update(password2 + salt) == hash
+    if Digest::SHA1.new.update(password2 + salt) == hash
       self.update_attributes(
         legacy_password_digest: nil,
         password: password
