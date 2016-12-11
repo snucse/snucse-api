@@ -50,7 +50,7 @@ class Api::V1::ProfileCommentsController < Api::V1::ApiController
     check_profile(profile)
     @profile_comment = ProfileComment.new(
       writer_id: @user.id,
-      profile_id: params[:profileId],
+      profile_id: profile.id,
       content: params[:content]
     )
     if @profile_comment.save
