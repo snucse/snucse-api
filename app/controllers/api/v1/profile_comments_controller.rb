@@ -15,7 +15,7 @@ class Api::V1::ProfileCommentsController < Api::V1::ApiController
   def index
     profile = Profile.find_by_sid! params[:profileId]
     check_profile(profile)
-    @profile_comments = ProfileComment.where(profile_id: params[:profileId]).includes(:writer)
+    @profile_comments = ProfileComment.where(profile_id: profile.id).includes(:writer)
   end
 
   api! "프로필 댓글을 조회한다."
