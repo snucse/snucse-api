@@ -21,7 +21,7 @@ class User < ActiveRecord::Base
     if self.profile_image.file.nil?
       nil
     else
-      "/api/v1/users/#{self.id}/profile_image"
+      "/profile_images/#{self.id}"
     end
   end
 end

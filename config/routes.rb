@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   apipie
+  get 'profile_images/:id', to: 'api/v1/users#show_profile_image'
   namespace :api, defaults: {format: :json} do
     namespace :v1 do
       resources :articles do
@@ -38,7 +39,6 @@ Rails.application.routes.draw do
         post :sign_in
         post :sign_up
         get :me
-        get ':id/profile_image', to: :show_profile_image
         post :profile_image, to: :upload_profile_image
         delete :profile_image, to: :destroy_profile_image
       end
