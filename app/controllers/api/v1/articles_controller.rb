@@ -73,12 +73,14 @@ class Api::V1::ArticlesController < Api::V1::ApiController
       content: params[:content]
     )
     if @article.save
-      params[:files].each do |file|
-        Attachment.create(
-          article_id: @article.id,
-          uploader_id: @user.id,
-          file: file
-        )
+      if params[:files]
+        params[:files].each do |file|
+          Attachment.create(
+            article_id: @article.id,
+            uploader_id: @user.id,
+            file: file
+          )
+        end
       end
       render :show, status: :created
     else
@@ -102,12 +104,14 @@ class Api::V1::ArticlesController < Api::V1::ApiController
       content: params[:content]
     )
       @article.attachments.where.not(id: params[:fileIds]).destroy_all
-      params[:files].each do |file|
-        Attachment.create(
-          article_id: @article.id,
-          uploader_id: @user.id,
-          file: file
-        )
+      if params[:files]
+        params[:files].each do |file|
+          Attachment.create(
+            article_id: @article.id,
+            uploader_id: @user.id,
+            file: file
+          )
+        end
       end
       render :show
     else
