@@ -4,6 +4,7 @@ class CreateAttachments < ActiveRecord::Migration
       t.integer :article_id, null: false
       t.integer :uploader_id
       t.string :file
+      t.string :key
 
       t.timestamps null: false
     end

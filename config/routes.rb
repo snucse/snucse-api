@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   apipie
-  get 'profile_images/:id', to: 'api/v1/users#show_profile_image'
   namespace :api, defaults: {format: :json} do
     namespace :v1 do
       resources :articles do
@@ -60,7 +59,10 @@ Rails.application.routes.draw do
         get :tag
       end
       resources :feeds, only: :index
-      resources :files, only: :show
     end
+  end
+  namespace :files do
+    get "/profile_images/:id", action: :show_profile_image
+    get "/:key/:file", action: :show, file: /.*/
   end
 end

@@ -1,5 +1,5 @@
 class Api::V1::UsersController < Api::V1::ApiController
-  skip_before_action :check_api_key, only: [:sign_in, :sign_up, :show_profile_image]
+  skip_before_action :check_api_key, only: [:sign_in, :sign_up]
   skip_before_action :check_user_level
   api! "인증 후 access token을 전달한다."
   param :username, String, desc: "사용자의 계정명(아이디)", required: true
@@ -58,20 +58,6 @@ class Api::V1::UsersController < Api::V1::ApiController
   }
   EOS
   def me
-  end
-
-  api! "프로필 이미지를 조회한다."
-  error code: 404, desc: "설정된 프로필 이미지가 없을 때"
-  def show_profile_image
-    if params[:id] == "me"
-      user = @user
-    else
-      user = User.find params[:id]
-    end
-    if user.profile_image.file.nil?
-      render json: {}, status: :not_found and return
-    end
-    send_file(user.profile_image.url, disposition: "inline")
   end
 
   api! "자신의 프로필 이미지를 업로드한다."
