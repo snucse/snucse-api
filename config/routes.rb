@@ -42,18 +42,18 @@ Rails.application.routes.draw do
         post :sign_in
         post :sign_up
         get :me
-        post :profile_image, to: :upload_profile_image
-        delete :profile_image, to: :destroy_profile_image
+        post :profile_image, action: :upload_profile_image
+        delete :profile_image, action: :destroy_profile_image
       end
       namespace :tags do
-        get "", to: :index
+        get "", action: :index
         get :recent
         get :show
         post :add_related_tag
         post :destroy_related_tag
       end
       namespace :search do
-        get "", to: :index
+        get "", action: :index
         get :article
         get :comment
         get :profile
