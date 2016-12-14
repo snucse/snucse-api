@@ -31,6 +31,9 @@ Rails.application.routes.draw do
         end
       end
       resources :profile_comments do
+        collection do
+          get :replies
+        end
         member do
           post :recommend
         end

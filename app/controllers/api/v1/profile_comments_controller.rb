@@ -7,7 +7,12 @@ class Api::V1::ProfileCommentsController < Api::V1::ApiController
   example <<-EOS
   {
     "profileComments": [
-      {"id": 1, "content": "content", ...},
+      {
+        "id": 1,
+        "content": "content",
+        "last_reply": {"id": 2, "content": "reply", ...},
+        ...
+      },
       ...
     ]
   }
@@ -15,7 +20,23 @@ class Api::V1::ProfileCommentsController < Api::V1::ApiController
   def index
     profile = Profile.find_by_sid! params[:profileId]
     check_profile(profile)
-    @profile_comments = ProfileComment.where(profile_id: profile.id).includes(:writer)
+    @profile_comments = ProfileComment.where(profile_id: profile.id, parent_comment_id: nil).includes(:writer, :last_reply)
+  end
+
+  api! "프로필 댓댓글 목록을 전달한다."
+  param :parentCommentId, Integer, desc: "부모 댓글의 ID", required: true
+  example <<-EOS
+  {
+    "comments": [
+      {"id": 1, "content": "content", ...},
+      ...
+    ]
+  }
+  EOS
+  def replies
+    profile_comment = ProfileComment.find(params[:parentCommentId])
+    check_profile(profile_comment.profile)
+    @profile_comments = profile_comment.replies
   end
 
   api! "프로필 댓글을 조회한다."
@@ -44,6 +65,7 @@ class Api::V1::ProfileCommentsController < Api::V1::ApiController
 
   api! "프로필 댓글을 생성한다."
   param :profileId, String, desc: "댓글이 작성되는 프로필의 ID", required: true
+  param :parentCommentId, Integer, desc: "댓댓글인 경우, 부모 댓글의 ID", required: false
   param :content, String, desc: "댓글 내용", required: true
   def create
     profile = Profile.find_by_sid! params[:profileId]
@@ -51,6 +73,7 @@ class Api::V1::ProfileCommentsController < Api::V1::ApiController
     @profile_comment = ProfileComment.new(
       writer_id: @user.id,
       profile_id: profile.id,
+      parent_comment_id: params[:parentCommentId],
       content: params[:content]
     )
     if @profile_comment.save

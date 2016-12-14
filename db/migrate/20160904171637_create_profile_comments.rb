@@ -3,6 +3,7 @@ class CreateProfileComments < ActiveRecord::Migration
     create_table :profile_comments do |t|
       t.integer :writer_id
       t.integer :profile_id
+      t.integer :parent_comment_id
       t.text :content
       t.integer :recommendation_count, default: 0
 
