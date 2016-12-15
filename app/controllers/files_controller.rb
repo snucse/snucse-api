@@ -11,7 +11,7 @@ class FilesController < ApplicationController
   api! "프로필 이미지를 조회한다."
   error code: 404, desc: "설정된 프로필 이미지가 없을 때"
   def show_profile_image
-    user = User.find params[:id]
+    user = User.find_by_username! params[:username]
     if user.profile_image.file.nil?
       render json: {}, status: :not_found and return
     end

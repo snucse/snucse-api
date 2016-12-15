@@ -62,7 +62,7 @@ Rails.application.routes.draw do
     end
   end
   namespace :files do
-    get "/profile_images/:id", action: :show_profile_image
+    get "/profile_images/:username", action: :show_profile_image
     get "/:key/:file", action: :show, file: /.*/
   end
 end
