@@ -115,6 +115,7 @@ class Api::V1::ProfileCommentsController < Api::V1::ApiController
   error code: 400, desc: "이미 추천한 프로필 댓글을 다시 추천하려는 경우(1일 1회 제한)"
   def recommend
     @profile_comment = ProfileComment.find params[:id]
+    check_profile(@profile_comment.profile)
     key = "recommendation:profile_comment:#{@profile_comment.id}:#{@user.id}"
     if $redis.exists(key)
       render json: {}, status: :bad_request and return

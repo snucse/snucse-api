@@ -1,6 +1,6 @@
 class Api::V1::ArticlesController < Api::V1::ApiController
   include AccessControl
-  skip_before_action :check_user_level, only: [:index, :show, :create, :update, :destroy]
+  skip_before_action :check_user_level
 
   DEFAULT_LIMIT = 10
   api! "글 목록을 전달한다."
@@ -135,6 +135,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   param :tag, String, desc: "추가할 태그", required: true
   def add_tag
     @article = Article.find params[:id]
+    check_article(@article)
     tag = Tag.create_with(creator_id: @user.id).find_or_create_by(name: params[:tag])
     tag.update_attributes(active: true)
     ArticleTag.create!(
@@ -150,6 +151,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   param :tag, String, desc: "삭제할 태그", required: true
   def destroy_tag
     @article = Article.find params[:id]
+    check_article(@article)
     tag = Tag.find_by_name! params[:tag]
     @article.tags.destroy tag
     tag.check_and_deactivate
@@ -160,6 +162,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   error code: 400, desc: "이미 추천한 글을 다시 추천하려는 경우(1일 1회 제한)"
   def recommend
     @article = Article.find params[:id]
+    check_article(@article)
     key = "recommendation:article:#{@article.id}:#{@user.id}"
     if $redis.exists(key)
       render json: {}, status: :bad_request and return

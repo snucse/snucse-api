@@ -1,4 +1,6 @@
 class Api::V1::ProfilesController < Api::V1::ApiController
+  include AccessControl
+  skip_before_action :check_user_level, only: [:following, :show, :add_tag, :destroy_tag]
   api! "프로필 목록을 전달한다."
   example <<-EOS
   {
@@ -44,6 +46,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   EOS
   def show
     @profile = Profile.find_by_sid! params[:id]
+    check_profile(@profile)
     @following = Follow.where(profile_id: @profile.id, user_id: @user.id).any?
   end
 
@@ -130,6 +133,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   param :tag, String, desc: "추가할 태그", required: true
   def add_tag
     @profile = Profile.find_by_sid! params[:id]
+    check_profile(@profile)
     tag = Tag.create_with(creator_id: @user.id).find_or_create_by(name: params[:tag])
     tag.update_attributes(active: true)
     ProfileTag.create!(
@@ -145,6 +149,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   param :tag, String, desc: "삭제할 태그", required: true
   def destroy_tag
     @profile = Profile.find_by_sid! params[:id]
+    check_profile(@profile)
     tag = Tag.find_by_name! params[:tag]
     @profile.tags.destroy tag
     tag.check_and_deactivate

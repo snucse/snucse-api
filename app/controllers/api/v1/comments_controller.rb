@@ -115,6 +115,7 @@ class Api::V1::CommentsController < Api::V1::ApiController
   error code: 400, desc: "이미 추천한 댓글을 다시 추천하려는 경우(1일 1회 제한)"
   def recommend
     @comment = Comment.find params[:id]
+    check_comment(@comment)
     key = "recommendation:comment:#{@comment.id}:#{@user.id}"
     if $redis.exists(key)
       render json: {}, status: :bad_request and return
