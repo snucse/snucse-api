@@ -124,6 +124,6 @@ class Api::V1::ProfileCommentsController < Api::V1::ApiController
     expire = DateTime.now.beginning_of_day.to_i + 60 * 60 * 24
     $redis.expireat(key, expire)
     @profile_comment.increment(:recommendation_count).save
-    render json: {}
+    render :show
   end
 end
