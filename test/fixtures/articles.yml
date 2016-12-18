@@ -3,3 +3,4 @@
   profiles: [_16]
   title: "title"
   content: "content"
+  rendering_mode: 1

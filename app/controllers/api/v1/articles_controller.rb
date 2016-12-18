@@ -60,6 +60,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   param :profileIds, String, desc: "글이 작성되는 프로필의 ID, ','로 연결된 문자열 목록", required: true
   param :title, String, desc: "글 제목", required: true
   param :content, String, desc: "글 내용", required: true
+  param :renderingMode, ["text", "md", "html"], desc: "글 렌더링 모드(텍스트/markdown/html)", required: true
   param :files, Array, of: File, desc: "첨부파일의 목록", required: false
   def create
     profiles = params[:profileIds].split(",").map {|sid| Profile.find_by_sid!(sid)}
@@ -72,6 +73,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
       title: params[:title],
       content: params[:content]
     )
+    @article.set_rendering_mode(params[:renderingMode])
     if @article.save
       if params[:files]
         params[:files].each do |file|
@@ -91,6 +93,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   api! "글을 수정한다."
   param :title, String, desc: "글 제목", required: true
   param :content, String, desc: "글 내용", required: true
+  param :renderingMode, ["text", "md", "html"], desc: "글 렌더링 모드(텍스트/markdown/html)", required: true
   param :fileIds, Array, of: Integer, desc: "기존 첨부파일 중 계속 첨부되는 파일의 ID, 여기에 포함되지 않는 파일은 삭제됨", required: false
   param :files, Array, of: File, desc: "새로 추가되는 첨부파일의 목록", required: false
   error code: 401, desc: "자신이 작성하지 않은 글을 수정하려고 하는 경우"
@@ -99,6 +102,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
     if @user != @article.writer
       render_unauthorized and return
     end
+    @article.set_rendering_mode(params[:renderingMode])
     if @article.update(
       title: params[:title],
       content: params[:content]

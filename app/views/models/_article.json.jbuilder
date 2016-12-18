@@ -1,4 +1,5 @@
 json.(article, :id, :title, :content, :comment_count, :recommendation_count)
+json.rendering_mode article.rendering_mode_label
 json.anonymous article.anonymous?
 json.created_at do
   json.date article.created_at.strftime("%Y%m%d")

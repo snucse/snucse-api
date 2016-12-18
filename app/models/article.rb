@@ -17,6 +17,18 @@ class Article < ActiveRecord::Base
   default_scope { order id: :desc }
   default_scope { includes article_tags: [:tag, :writer] }
 
+  def rendering_mode_label
+    [nil, "text", "md", "html"][self.rendering_mode]
+  end
+
+  def set_rendering_mode(label)
+    self.rendering_mode = {
+      "text" => 1,
+      "md" => 2,
+      "html" => 3
+    }[label]
+  end
+
   def anonymous?
     self.writer_id.nil?
   end

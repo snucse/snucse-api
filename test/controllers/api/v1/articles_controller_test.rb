@@ -26,7 +26,8 @@ class Api::V1::ArticlesControllerTest < ActionController::TestCase
           writer: User.first,
           profiles: [profile],
           title: "title",
-          content: "content"
+          content: "content",
+          rendering_mode: 1
         )
       end
     end
@@ -42,7 +43,8 @@ class Api::V1::ArticlesControllerTest < ActionController::TestCase
           writer: User.first,
           profiles: [profile],
           title: "title",
-          content: "content"
+          content: "content",
+          rendering_mode: 1
         )
       end
     end
@@ -64,11 +66,13 @@ class Api::V1::ArticlesControllerTest < ActionController::TestCase
   test "[articles#create] 필수 parameter가 없는 경우 실패" do
     set_access_token
     profile_ids = [Profile.last.sid].join(",")
-    post :create, title: "title", content: "content"
+    post :create, title: "title", content: "content", renderingMode: "text"
     assert_response :bad_request
-    post :create, profileIds: profile_ids, content: "content"
+    post :create, profileIds: profile_ids, content: "content", renderingMode: "text"
     assert_response :bad_request
-    post :create, profileIds: profile_ids, title: "title"
+    post :create, profileIds: profile_ids, title: "title", renderingMode: "text"
+    assert_response :bad_request
+    post :create, profileIds: profile_ids, title: "title", content: "content"
     assert_response :bad_request
   end
 
@@ -77,7 +81,7 @@ class Api::V1::ArticlesControllerTest < ActionController::TestCase
     profile_ids = [Profile.last.sid].join(",")
     title = "titletitle"
     content = "contentcontent"
-    post :create, profileIds: profile_ids, title: title, content: content, format: :json
+    post :create, profileIds: profile_ids, title: title, content: content, renderingMode: "text", format: :json
     assert_response :success
     response = JSON.parse @response.body
     article = Article.find(response["id"])
@@ -87,14 +91,14 @@ class Api::V1::ArticlesControllerTest < ActionController::TestCase
 
   test "[articles#create] 프로필 ID를 지정하지 않은 경우 실패" do
     set_access_token
-    post :create, profileIds: "", title: "title", content: "content", format: :json
+    post :create, profileIds: "", title: "title", content: "content", renderingMode: "text", format: :json
     assert_response :bad_request
   end
 
   test "[articles#update] 존재하지 않는 글을 수정하려고 하는 경우 실패" do
     article_id = Article.last.id + 1
     set_access_token
-    put :update, id: article_id, title: "title", content: "content"
+    put :update, id: article_id, title: "title", content: "content", renderingMode: "text"
     assert_response :not_found
   end
 
@@ -103,19 +107,22 @@ class Api::V1::ArticlesControllerTest < ActionController::TestCase
       writer: User.last,
       profiles: [Profile.last],
       title: "title",
-      content: "content"
+      content: "content",
+      rendering_mode: 1
     )
     set_access_token
-    put :update, id: article.id, title: "title", content: "content"
+    put :update, id: article.id, title: "title", content: "content", renderingMode: "text"
     assert_response :unauthorized
   end
 
   test "[articles#update] 필수 parameter가 없는 경우 실패" do
     set_access_token
     article_id = Article.last.id
-    put :update, id: article_id, content: "content"
+    put :update, id: article_id, content: "content", renderingMode: "text"
     assert_response :bad_request
-    put :update, id: article_id, title: "title"
+    put :update, id: article_id, title: "title", renderingMode: "text"
+    assert_response :bad_request
+    put :update, id: article_id, title: "title", content: "content"
     assert_response :bad_request
   end
 
@@ -124,7 +131,7 @@ class Api::V1::ArticlesControllerTest < ActionController::TestCase
     article_id = Article.last.id
     title = "title2"
     content = "content2"
-    put :update, id: article_id, title: title, content: content, format: :json
+    put :update, id: article_id, title: title, content: content, renderingMode: "text", format: :json
     assert_response :success
     article = Article.find(article_id)
     assert_equal title, article.title
@@ -143,7 +150,8 @@ class Api::V1::ArticlesControllerTest < ActionController::TestCase
       writer: User.last,
       profiles: [Profile.last],
       title: "title",
-      content: "content"
+      content: "content",
+      rendering_mode: 1
     )
     set_access_token
     delete :destroy, id: article.id
