@@ -17,6 +17,10 @@ class User < ActiveRecord::Base
     self.level == LEVEL_ACTIVE
   end
 
+  def valid?
+    [LEVEL_ASSOCIATE, LEVEL_ACTIVE].include? self.level
+  end
+
   def profile_image_uri
     "/files/profile_images/#{self.username}"
   end
