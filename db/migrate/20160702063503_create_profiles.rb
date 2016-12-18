@@ -5,6 +5,7 @@ class CreateProfiles < ActiveRecord::Migration
       t.string :name
       t.integer :admin_id
       t.text :description
+      t.boolean :is_public, default: false
 
       t.timestamps null: false
     end
