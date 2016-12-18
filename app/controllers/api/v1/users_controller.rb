@@ -86,7 +86,11 @@ class Api::V1::UsersController < Api::V1::ApiController
 
   api! "자신의 프로필 이미지를 업로드한다."
   param :image, File, desc: "프로필 이미지", required: true
+  error code: 400, desc: "이미지 파일이 아닌 파일을 업로드한 경우"
   def upload_profile_image
+    unless params[:image].content_type.start_with? "image"
+      render json: {}, status: :bad_request and return
+    end
     @user.update_attributes(
       profile_image: params[:image]
     )
