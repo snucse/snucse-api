@@ -29,4 +29,3 @@ module Snucse
 end
 
 require 'carrierwave/orm/activerecord'
-CarrierWave::SanitizedFile.sanitize_regexp = /[^[:word:]\.\-\+]/
