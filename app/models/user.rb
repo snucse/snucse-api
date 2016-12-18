@@ -17,7 +17,7 @@ class User < ActiveRecord::Base
     self.level == LEVEL_ACTIVE
   end
 
-  def valid?
+  def valid_level?
     [LEVEL_ASSOCIATE, LEVEL_ACTIVE].include? self.level
   end
 

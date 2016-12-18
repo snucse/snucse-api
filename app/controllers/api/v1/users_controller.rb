@@ -14,7 +14,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   def sign_in
     user = User.where(username: params[:username]).first
     if user and user.check_password(params[:password])
-      if user.valid?
+      if user.valid_level?
         api_key = ApiKey.create(
           user_id: user.id
         )
