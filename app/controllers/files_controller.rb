@@ -12,9 +12,8 @@ class FilesController < ApplicationController
   error code: 404, desc: "설정된 프로필 이미지가 없을 때"
   def show_profile_image
     user = User.find_by_username! params[:username]
-    if user.profile_image.file.nil?
-      render json: {}, status: :not_found and return
-    end
-    send_file(user.profile_image.url, disposition: "inline")
+    url = "#{Rails.root}/public/default.png"
+    url = user.profile_image.url unless user.profile_image.file.nil?
+    send_file(url, disposition: "inline")
   end
 end
