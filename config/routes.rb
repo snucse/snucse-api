@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  apipie
+  if Rails.env.development?
+    apipie
+  end
   namespace :api, defaults: {format: :json} do
     namespace :v1 do
       resources :articles do
