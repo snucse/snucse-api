@@ -29,8 +29,8 @@ class Api::V1::UsersController < Api::V1::ApiController
   param :password, String, desc: "사용할 비밀번호", required: true
   param :name, String, desc: "사용자의 이름", required: true
   param :birthday, /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/, desc: "생년월일", required: false
-  param :bs_number, /^[0-9]{4}-[0-9]{5}$/, desc: "학번", required: false
-  param :phone_number, /^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$/, desc: "휴대전화", required: false
+  param :bsNumber, /^[0-9]{4}-[0-9]{5}$/, desc: "학번", required: false
+  param :phoneNumber, /^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$/, desc: "휴대전화", required: false
   error code: 400, desc: "잘못된 회원 가입 요청"
   def sign_up
     if Profile.where(sid: params[:username]).any?
@@ -43,8 +43,8 @@ class Api::V1::UsersController < Api::V1::ApiController
       birthday: params[:birthday]
     )
     user.set_information(
-      bs_number: params[:bs_number],
-      phone_number: [params[:phone_number]]
+      bs_number: params[:bsNumber],
+      phone_number: [params[:phoneNumber]]
     )
     if user.save
       Profile.create(
@@ -71,14 +71,14 @@ class Api::V1::UsersController < Api::V1::ApiController
   api! "로그인한 사용자의 정보를 변경한다."
   param :password, String, desc: "사용할 비밀번호", required: false
   param :birthday, /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/, desc: "생년월일", required: false
-  param :bs_number, /^[0-9]{4}-[0-9]{5}$/, desc: "학번", required: false
-  param :phone_number, /^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$/, desc: "휴대전화", required: false
+  param :bsNumber, /^[0-9]{4}-[0-9]{5}$/, desc: "학번", required: false
+  param :phoneNumber, /^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$/, desc: "휴대전화", required: false
   def update
     @user.password = params[:password] if params[:password]
     @user.birthday = params[:birthday] if params[:birthday]
     @user.set_information(
-      bs_number: params[:bs_number],
-      phone_number: [params[:phone_number]]
+      bs_number: params[:bsNumber],
+      phone_number: [params[:phoneNumber]]
     )
     @user.save
     render json: {}
