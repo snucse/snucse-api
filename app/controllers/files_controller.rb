@@ -13,7 +13,7 @@ class FilesController < ApplicationController
   def show_profile_image
     user = User.find_by_username! params[:username]
     url = "#{Rails.root}/public/default.png"
-    url = user.profile_image.url unless user.profile_image.file.nil?
+    url = user.profile_image.thumb.url unless user.profile_image.thumb.file.nil?
     send_file(url, disposition: "inline")
   end
 end
