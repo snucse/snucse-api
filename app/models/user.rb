@@ -20,4 +20,10 @@ class User < ActiveRecord::Base
   def profile_image_uri
     "/files/profile_images/#{self.username}"
   end
+
+  def set_information(new_information)
+    information = JSON.parse(self.information) rescue Hash.new
+    information.merge! new_information
+    self.information = JSON.generate(information)
+  end
 end
