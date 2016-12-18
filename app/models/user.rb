@@ -18,10 +18,6 @@ class User < ActiveRecord::Base
   end
 
   def profile_image_uri
-    if self.profile_image.file.nil?
-      nil
-    else
-      "/files/profile_images/#{self.username}"
-    end
+    "/files/profile_images/#{self.username}"
   end
 end
