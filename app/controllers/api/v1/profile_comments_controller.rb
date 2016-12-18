@@ -20,7 +20,7 @@ class Api::V1::ProfileCommentsController < Api::V1::ApiController
   def index
     profile = Profile.find_by_sid! params[:profileId]
     check_profile(profile)
-    @profile_comments = ProfileComment.where(profile_id: profile.id, parent_comment_id: nil).includes(:writer, :last_reply)
+    @profile_comments = ProfileComment.where(profile_id: profile.id, parent_comment_id: nil).includes(:profile, :writer, :last_reply)
   end
 
   api! "프로필 댓댓글 목록을 전달한다."
@@ -36,7 +36,7 @@ class Api::V1::ProfileCommentsController < Api::V1::ApiController
   def replies
     profile_comment = ProfileComment.find(params[:parentCommentId])
     check_profile(profile_comment.profile)
-    @profile_comments = profile_comment.replies
+    @profile_comments = profile_comment.replies.includes(:profile, :writer)
   end
 
   api! "프로필 댓글을 조회한다."
