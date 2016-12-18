@@ -27,6 +27,7 @@ class Article < ActiveRecord::Base
       "md" => 2,
       "html" => 3
     }[label]
+    self.rendering_mode ||= 1
   end
 
   def anonymous?
