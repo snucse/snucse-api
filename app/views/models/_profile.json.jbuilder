@@ -1,4 +1,4 @@
-json.(profile, :name, :description)
+json.(profile, :name, :description, :comment_count)
 json.id profile.sid
 json.admin do
   json.(profile.admin, :id, :username, :name)
