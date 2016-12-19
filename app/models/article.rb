@@ -24,7 +24,7 @@ class Article < ActiveRecord::Base
   def rendered_content
     case self.rendering_mode
     when 1
-      CGI.escapeHTML(self.content)
+      CGI.escapeHTML(self.content).gsub("\n", "<br>")
     when 2
       renderer = Redcarpet::Render::HTML.new
       markdown = Redcarpet::Markdown.new(renderer)
