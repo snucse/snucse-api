@@ -1,4 +1,4 @@
-json.(article, :id, :title, :content, :comment_count, :recommendation_count, :created_at)
+json.(article, :id, :title, :content, :rendered_content, :comment_count, :recommendation_count, :created_at)
 json.rendering_mode article.rendering_mode_label
 json.anonymous article.anonymous?
 json.profiles article.profiles do |profile|

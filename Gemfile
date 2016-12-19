@@ -42,6 +42,8 @@ gem 'redis'
 gem 'carrierwave'
 gem 'mini_magick'
 
+gem 'redcarpet'
+
 gem 'apipie-rails', github: 'Apipie/apipie-rails'
 
 group :development, :test do

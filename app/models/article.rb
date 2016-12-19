@@ -21,6 +21,19 @@ class Article < ActiveRecord::Base
     [nil, "text", "md", "html"][self.rendering_mode]
   end
 
+  def rendered_content
+    case self.rendering_mode
+    when 1
+      CGI.escapeHTML(self.content)
+    when 2
+      renderer = Redcarpet::Render::HTML.new
+      markdown = Redcarpet::Markdown.new(renderer)
+      markdown.render(self.content)
+    else
+      self.content
+    end
+  end
+
   def set_rendering_mode(label)
     self.rendering_mode = {
       "text" => 1,
