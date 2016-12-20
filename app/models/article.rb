@@ -27,7 +27,7 @@ class Article < ActiveRecord::Base
       CGI.escapeHTML(self.content).gsub("\n", "<br>")
     when 2
       renderer = Redcarpet::Render::HTML.new
-      markdown = Redcarpet::Markdown.new(renderer)
+      markdown = Redcarpet::Markdown.new(renderer, tables: true, strikethrough: true)
       markdown.render(self.content)
     else
       self.content
