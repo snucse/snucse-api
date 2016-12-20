@@ -73,6 +73,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
       title: params[:title],
       content: params[:content]
     )
+    @article.id = get_uid(profiles.first.name, params[:title]) if Rails.env.production?
     @article.set_rendering_mode(params[:renderingMode])
     if @article.save
       if params[:files]
@@ -176,5 +177,23 @@ class Api::V1::ArticlesController < Api::V1::ApiController
     $redis.expireat(key, expire)
     @article.increment(:recommendation_count).save
     render :show
+  end
+
+private
+
+  def get_uid(profile_name, title)
+    config = Rails.application.config_for(:snucse)
+    http = Net::HTTP.new("www.snucse.org", 443)
+    http.use_ssl = true
+    resp = http.post("/Authentication/Login.aspx", "login_type=member_login&referrer=&redirect_mode=none&member_account=#{config["username"]}&member_password=#{config["password"]}&secure=on")
+    cookie = resp["Set-Cookie"]
+
+    subject = "#{profile_name} - #{title}"
+    content = "새 스누씨에 글이 등록되었습니다. https://new.snucse.org/"
+    resp = http.post("/Board/WriteSubmit.aspx", "subject=#{URI.encode(subject)}&content=#{URI.encode(content)}&render_type=text&action=write&uid=420842&article_uid=&survey_id=&write=ok&is_mine=&is_not_exposed=on&MaxAcceptedFileCount=500", {"Cookie" => cookie})
+
+    resp = http.get("/420842", {"Cookie" => cookie})
+    doc = Nokogiri::HTML(resp.body)
+    doc.css("#BoardListBody a")[0]["href"][2..-1]
   end
 end

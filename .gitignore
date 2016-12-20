@@ -46,3 +46,4 @@ uploads/
 
 config/redis.yml
 config/elasticsearch.yml
+config/snucse.yml
