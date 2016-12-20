@@ -22,7 +22,8 @@ class User < ActiveRecord::Base
   end
 
   def profile_image_uri
-    "/files/profile_images/#{self.username}"
+    hash = "?#{Digest::SHA256.hexdigest(self.profile_image.thumb.read)[0..7]}" rescue nil
+    "/files/profile_images/#{self.username}#{hash}"
   end
 
   def set_information(new_information)
