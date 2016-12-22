@@ -3,7 +3,7 @@ module AccessControl
 
   def check_profile(profile)
     return if @user.active?
-    render json: {}, status: :not_found if Follow.where(user_id: @user_id, profile_id: profile.id).empty?
+    render json: {}, status: :not_found if Follow.where(user_id: @user.id, profile_id: profile.id).empty?
   end
 
   def check_article(article)
