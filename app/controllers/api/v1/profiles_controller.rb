@@ -72,8 +72,8 @@ class Api::V1::ProfilesController < Api::V1::ApiController
 
   api! "프로필을 생성한다."
   param :id, /^[A-Za-z_][A-Za-z0-9_]*$/, desc: "주소 등에서 쓰일 프로필의 식별자", required: true
-  param :name, String, desc: "프로필의 이름", required: true
-  param :description, String, desc: "프로필 대문에 표시될 내용", required: true
+  param :name, String, desc: "프로필의 이름", required: true, empty: false
+  param :description, String, desc: "프로필 대문에 표시될 내용", required: true, empty: false
   def create
     @profile = Profile.new(
       sid: params[:id],
@@ -94,8 +94,8 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   end
 
   api! "프로필을 수정한다."
-  param :name, String, desc: "프로필의 이름", required: false
-  param :description, String, desc: "프로필 대문에 표시될 내용", required: false
+  param :name, String, desc: "프로필의 이름", required: false, empty: false
+  param :description, String, desc: "프로필 대문에 표시될 내용", required: false, empty: false
   error code: 401, desc: "자신이 관리자가 아닌 프로필을 수정하려고 하는 경우"
   def update
     @profile = Profile.find_by_sid! params[:id]
@@ -112,7 +112,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   end
 
   api! "프로필의 관리자를 다른 사용자로 바꾼다."
-  param :adminId, String, desc: "새로운 관리자의 ID", required: true
+  param :adminId, String, desc: "새로운 관리자의 ID", required: true, empty: false
   error code: 401, desc: "자신이 관리자가 아닌 프로필을 수정하려고 하는 경우"
   def transfer
     @profile = Profile.find_by_sid! params[:id]
@@ -130,7 +130,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   end
 
   api! "프로필에 태그를 추가한다."
-  param :tag, String, desc: "추가할 태그", required: true
+  param :tag, String, desc: "추가할 태그", required: true, empty: false
   def add_tag
     @profile = Profile.find_by_sid! params[:id]
     check_profile(@profile)
@@ -146,7 +146,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   end
 
   api! "프로필에서 태그를 삭제한다."
-  param :tag, String, desc: "삭제할 태그", required: true
+  param :tag, String, desc: "삭제할 태그", required: true, empty: false
   def destroy_tag
     @profile = Profile.find_by_sid! params[:id]
     check_profile(@profile)

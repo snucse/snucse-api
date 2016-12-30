@@ -2,8 +2,8 @@ class Api::V1::UsersController < Api::V1::ApiController
   skip_before_action :check_api_key, only: [:sign_in, :sign_up]
   skip_before_action :check_user_level
   api! "인증 후 access token을 전달한다."
-  param :username, String, desc: "사용자의 계정명(아이디)", required: true
-  param :password, String, desc: "사용자의 비밀번호", required: true
+  param :username, String, desc: "사용자의 계정명(아이디)", required: true, empty: false
+  param :password, String, desc: "사용자의 비밀번호", required: true, empty: false
   error code: 403, desc: "존재하지 않는 계정이거나 비밀번호가 일치하지 않는 경우"
   error code: 419, desc: "가입 승인이 되지 않은 계정인 경우"
   example <<-EOS
@@ -30,9 +30,9 @@ class Api::V1::UsersController < Api::V1::ApiController
   end
 
   api! "회원 가입을 처리한다."
-  param :username, String, desc: "사용할 계정명(아이디)", required: true
-  param :password, String, desc: "사용할 비밀번호", required: true
-  param :name, String, desc: "사용자의 이름", required: true
+  param :username, String, desc: "사용할 계정명(아이디)", required: true, empty: false
+  param :password, String, desc: "사용할 비밀번호", required: true, empty: false
+  param :name, String, desc: "사용자의 이름", required: true, empty: false
   param :birthday, /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/, desc: "생년월일", required: false
   param :bsNumber, /^[0-9]{4}-[0-9]{5}$/, desc: "학번", required: false
   param :phoneNumber, /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/, desc: "전화번호", required: false
@@ -74,7 +74,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   end
 
   api! "로그인한 사용자의 정보를 변경한다."
-  param :password, String, desc: "사용할 비밀번호", required: false
+  param :password, String, desc: "사용할 비밀번호", required: false, empty: false
   param :birthday, /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/, desc: "생년월일", required: false
   param :bsNumber, /^[0-9]{4}-[0-9]{5}$/, desc: "학번", required: false
   param :phoneNumber, /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/, desc: "전화번호", required: false

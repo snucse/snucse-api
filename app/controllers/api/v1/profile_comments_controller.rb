@@ -66,7 +66,7 @@ class Api::V1::ProfileCommentsController < Api::V1::ApiController
   api! "프로필 댓글을 생성한다."
   param :profileId, String, desc: "댓글이 작성되는 프로필의 ID", required: true
   param :parentCommentId, Integer, desc: "댓댓글인 경우, 부모 댓글의 ID", required: false
-  param :content, String, desc: "댓글 내용", required: true
+  param :content, String, desc: "댓글 내용", required: true, empty: false
   def create
     profile = Profile.find_by_sid! params[:profileId]
     check_profile(profile)
@@ -84,7 +84,7 @@ class Api::V1::ProfileCommentsController < Api::V1::ApiController
   end
 
   api! "프로필 댓글을 수정한다."
-  param :content, String, desc: "댓글 내용", required: true
+  param :content, String, desc: "댓글 내용", required: true, empty: false
   error code: 401, desc: "자신이 작성하지 않은 프로필 댓글을 수정하려고 하는 경우"
   def update
     @profile_comment = ProfileComment.find params[:id]

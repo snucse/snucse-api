@@ -38,7 +38,7 @@ class Api::V1::TagsController < Api::V1::ApiController
   end
 
   api! "태그의 정보를 전달한다."
-  param :tag, String, desc: "태그", required: true
+  param :tag, String, desc: "태그", required: true, empty: false
   example <<-EOS
   {
     "creator": {
@@ -66,8 +66,8 @@ class Api::V1::TagsController < Api::V1::ApiController
   end
 
   api! "연관 태그를 추가한다."
-  param :tag, String, desc: "태그", required: true
-  param :relatedTag, String, desc: "추가할 연관 태그", required: true
+  param :tag, String, desc: "태그", required: true, empty: false
+  param :relatedTag, String, desc: "추가할 연관 태그", required: true, empty: false
   def add_related_tag
     @tag = Tag.find_by_name! params[:tag]
     related_tag = Tag.create_with(creator_id: @user.id).find_or_create_by(name: params[:relatedTag])
@@ -86,8 +86,8 @@ class Api::V1::TagsController < Api::V1::ApiController
   end
 
   api! "연관 태그를 삭제한다."
-  param :tag, String, desc: "태그", required: true
-  param :relatedTag, String, desc: "삭제할 연관 태그", required: true
+  param :tag, String, desc: "태그", required: true, empty: false
+  param :relatedTag, String, desc: "삭제할 연관 태그", required: true, empty: false
   def destroy_related_tag
     @tag = Tag.find_by_name! params[:tag]
     related_tag = Tag.find_by_name! params[:relatedTag]

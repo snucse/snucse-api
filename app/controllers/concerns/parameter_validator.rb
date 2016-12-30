@@ -1,5 +1,24 @@
 module ParameterValidator
   extend ActiveSupport::Concern
+  class NonemptyStringValidator < Apipie::Validator::BaseValidator
+    def initialize(param_description, argument)
+      super(param_description)
+    end
+
+    def validate(value)
+      value.is_a? String and not value.empty?
+    end
+
+    def self.build(param_description, argument, options, block)
+      if argument == String and options[:empty] == false
+        self.new(param_description, argument)
+      end
+    end
+
+    def description
+      "Must be non-empty string."
+    end
+  end
   class IntegerValidator < Apipie::Validator::BaseValidator
     def initialize(param_description, argument)
       super(param_description)
