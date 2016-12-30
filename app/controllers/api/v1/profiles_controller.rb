@@ -75,6 +75,9 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   param :name, String, desc: "프로필의 이름", required: true, empty: false
   param :description, String, desc: "프로필 대문에 표시될 내용", required: true, empty: false
   def create
+    if Profile.where(sid: params[:id]).any? or ReservedWord.where(word: params[:id]).any?
+      render json: {}, status: :bad_request and return
+    end
     @profile = Profile.new(
       sid: params[:id],
       name: params[:name],

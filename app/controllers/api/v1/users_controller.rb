@@ -38,7 +38,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   param :phoneNumber, /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/, desc: "전화번호", required: false
   error code: 400, desc: "잘못된 회원 가입 요청"
   def sign_up
-    if Profile.where(sid: params[:username]).any?
+    if Profile.where(sid: params[:username]).any? or ReservedWord.where(word: params[:username]).any?
       render json: {}, status: :bad_request and return
     end
     user = User.new(
