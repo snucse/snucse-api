@@ -52,12 +52,6 @@ class Api::V1::UsersController < Api::V1::ApiController
       phone_number: [params[:phoneNumber]]
     )
     if user.save
-      Profile.create(
-        name: params[:name],
-        admin_id: user.id,
-        description: "",
-        sid: params[:username]
-      )
       render json: {}
     else
       render json: {}, status: :bad_request
