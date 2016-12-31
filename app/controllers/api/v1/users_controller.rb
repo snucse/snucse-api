@@ -30,7 +30,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   end
 
   api! "회원 가입을 처리한다."
-  param :username, String, desc: "사용할 계정명(아이디)", required: true, empty: false
+  param :username, /^[A-Za-z_][A-Za-z0-9_]*$/, desc: "사용할 계정명(아이디)", required: true, empty: false
   param :password, String, desc: "사용할 비밀번호", required: true, empty: false
   param :name, String, desc: "사용자의 이름", required: true, empty: false
   param :birthday, /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/, desc: "생년월일", required: false
