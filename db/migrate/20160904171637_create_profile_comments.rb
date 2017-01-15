@@ -6,6 +6,7 @@ class CreateProfileComments < ActiveRecord::Migration
       t.integer :parent_comment_id
       t.text :content
       t.integer :recommendation_count, default: 0
+      t.integer :reply_count, default: 0
 
       t.timestamps null: false
     end

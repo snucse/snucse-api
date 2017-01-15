@@ -9,6 +9,7 @@ class CreateComments < ActiveRecord::Migration
       t.string :password_digest
       t.string :legacy_password_digest
       t.integer :recommendation_count, default: 0
+      t.integer :reply_count, default: 0
 
       t.timestamps null: false
     end
