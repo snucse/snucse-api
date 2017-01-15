@@ -3,6 +3,7 @@ class CreateProfiles < ActiveRecord::Migration
     create_table :profiles do |t|
       t.string :sid
       t.string :name
+      t.integer :profile_type, null: false
       t.integer :admin_id
       t.text :description
       t.boolean :is_public, default: false

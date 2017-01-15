@@ -11,7 +11,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   }
   EOS
   def index
-    @profiles = Profile.all.includes(:admin)
+    @profiles = Profile.group_profiles.includes(:admin)
   end
 
   api! "자신이 팔로우하고 있는 프로필 목록을 전달한다."
@@ -81,6 +81,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
     @profile = Profile.new(
       sid: params[:id],
       name: params[:name],
+      profile_type: Profile::TYPE_GROUP,
       admin_id: @user.id,
       description: params[:description]
     )
@@ -121,6 +122,9 @@ class Api::V1::ProfilesController < Api::V1::ApiController
     @profile = Profile.find_by_sid! params[:id]
     if @user != @profile.admin
       render_unauthorized and return
+    end
+    if @profile.user?
+      render json: {}, status: :bad_request and return
     end
     admin = User.find_by_username! params[:adminId]
     if @profile.update(
