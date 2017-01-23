@@ -20,10 +20,9 @@ class Api::V1::UsersControllerTest < ActionController::TestCase
     assert_response :bad_request
   end
 
-  test "[users#sign_up] 가입 성공 시 프로필 생성" do
+  test "[users#sign_up] 가입 성공" do
     post :sign_up, username: "username", password: "password", name: "가입자"
     assert_response :success
-    assert Profile.where(sid: "username").any?
   end
 
   test "[users#sign_in] 필수 parameter가 없는 경우 실패" do

@@ -1,17 +1,20 @@
 admin:
   name: "관리자"
+  profile_type: 2
   admin: admin
   description: ""
   sid: "admin"
 
 other:
   name: "다른사람"
+  profile_type: 2
   admin: other
   description: ""
   sid: "other"
 
 _16:
   name: "16학번 모임"
+  profile_type: 1
   admin: admin
   description: ""
   sid: "_16"
