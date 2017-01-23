@@ -1,4 +1,4 @@
-class Profile < ActiveRecord::Base
+class Profile < ApplicationRecord
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
   belongs_to :admin, class_name: User

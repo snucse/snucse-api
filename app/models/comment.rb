@@ -1,4 +1,4 @@
-class Comment < ActiveRecord::Base
+class Comment < ApplicationRecord
   include LegacyPassword
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks

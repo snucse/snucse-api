@@ -1,4 +1,4 @@
-class ProfileComment < ActiveRecord::Base
+class ProfileComment < ApplicationRecord
   belongs_to :writer, class_name: User
   belongs_to :profile
   has_many :replies, class_name: ProfileComment, foreign_key: :parent_comment_id

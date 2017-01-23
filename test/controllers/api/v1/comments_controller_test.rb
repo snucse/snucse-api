@@ -10,7 +10,7 @@ class Api::V1::CommentsControllerTest < ActionController::TestCase
   test "[comments#list] 댓글 목록을 가져옴" do
     set_access_token
     article = Article.last
-    get :index, articleId: article.id, format: :json
+    get :index, params: {articleId: article.id}, format: :json
     assert_response :success
     response = JSON.parse @response.body
     assert_equal response["comments"].size, article.comments.size
@@ -19,7 +19,7 @@ class Api::V1::CommentsControllerTest < ActionController::TestCase
   test "[comments#show] 특정 댓글을 조회" do
     set_access_token
     comment = Comment.last
-    get :show, id: comment.id, format: :json
+    get :show, params: {id: comment.id}, format: :json
     assert_response :success
     response = JSON.parse @response.body
     assert_equal response["id"], comment.id
@@ -28,9 +28,9 @@ class Api::V1::CommentsControllerTest < ActionController::TestCase
   test "[comments#create] 필수 parameter가 없는 경우 실패" do
     set_access_token
     article = Article.last
-    post :create, content: "content"
+    post :create, params: {content: "content"}
     assert_response :bad_request
-    post :create, article_id: article.id
+    post :create, params: {article_id: article.id}
     assert_response :bad_request
   end
 
@@ -38,7 +38,7 @@ class Api::V1::CommentsControllerTest < ActionController::TestCase
     set_access_token
     article = Article.last
     content = "contentcontent"
-    post :create, articleId: article.id, content: content, format: :json
+    post :create, params: {articleId: article.id, content: content}, format: :json
     assert_response :success
     response = JSON.parse @response.body
     comment = Comment.find(response["id"])
@@ -48,7 +48,7 @@ class Api::V1::CommentsControllerTest < ActionController::TestCase
   test "[comments#update] 존재하지 않는 댓글을 수정하려고 하는 경우 실패" do
     set_access_token
     comment_id = Comment.last.id + 1
-    put :update, id: comment_id, content: "content"
+    put :update, params: {id: comment_id, content: "content"}
     assert_response :not_found
   end
 
@@ -59,14 +59,14 @@ class Api::V1::CommentsControllerTest < ActionController::TestCase
       article: Article.last,
       content: "content"
     )
-    put :update, id: comment.id, content: "content"
+    put :update, params: {id: comment.id, content: "content"}
     assert_response :unauthorized
   end
 
   test "[comments#update] 필수 parameter가 없는 경우 실패" do
     set_access_token
     comment_id = Comment.last.id
-    put :update, id: comment_id
+    put :update, params: {id: comment_id}
     assert_response :bad_request
   end
 
@@ -74,7 +74,7 @@ class Api::V1::CommentsControllerTest < ActionController::TestCase
     set_access_token
     comment_id = Comment.last.id
     content = "content2"
-    put :update, id: comment_id, content: content, format: :json
+    put :update, params: {id: comment_id, content: content}, format: :json
     assert_response :success
     comment = Comment.find(comment_id)
     assert_equal content, comment.content
@@ -83,7 +83,7 @@ class Api::V1::CommentsControllerTest < ActionController::TestCase
   test "[comments#destroy] 존재하지 않는 글을 삭제하려고 하는 경우 실패" do
     comment_id = Comment.last.id + 1
     set_access_token
-    delete :destroy, id: comment_id
+    delete :destroy, params: {id: comment_id}
     assert_response :not_found
   end
 
@@ -94,14 +94,14 @@ class Api::V1::CommentsControllerTest < ActionController::TestCase
       content: "content"
     )
     set_access_token
-    delete :destroy, id: comment.id
+    delete :destroy, params: {id: comment.id}
     assert_response :unauthorized
   end
 
   test "[comments#destroy] 글 삭제" do
     set_access_token
     comment_id = Comment.last.id
-    delete :destroy, id: comment_id
+    delete :destroy, params: {id: comment_id}
     assert_response :success
     assert Comment.where(id: comment_id).empty?
   end

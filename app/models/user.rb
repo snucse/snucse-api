@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   include LegacyPassword
   has_secure_password validations: false
   has_many :follows

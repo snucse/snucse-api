@@ -1,4 +1,4 @@
-class Article < ActiveRecord::Base
+class Article < ApplicationRecord
   include LegacyPassword
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks

@@ -1,3 +1,3 @@
-class FavoriteArticle < ActiveRecord::Base
+class FavoriteArticle < ApplicationRecord
   belongs_to :article
 end

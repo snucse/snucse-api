@@ -1,2 +1,2 @@
-class ReservedWord < ActiveRecord::Base
+class ReservedWord < ApplicationRecord
 end

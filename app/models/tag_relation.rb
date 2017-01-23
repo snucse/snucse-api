@@ -1,4 +1,4 @@
-class TagRelation < ActiveRecord::Base
+class TagRelation < ApplicationRecord
   belongs_to :tag
   belongs_to :related_tag, class_name: Tag
   belongs_to :writer, class_name: User

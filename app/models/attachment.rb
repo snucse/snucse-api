@@ -1,4 +1,4 @@
-class Attachment < ActiveRecord::Base
+class Attachment < ApplicationRecord
   include LegacyPassword
   belongs_to :uploader, class_name: User
   belongs_to :article
