@@ -1,6 +1,6 @@
 class Api::V1::ApiController < ApplicationController
+  include ActionController::HttpAuthentication::Token::ControllerMethods
   extend ParameterValidator
-  skip_before_action :verify_authenticity_token
   before_action :check_api_key, :check_user_level
 
   def check_api_key
