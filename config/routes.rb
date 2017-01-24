@@ -61,6 +61,7 @@ Rails.application.routes.draw do
         get :tag
       end
       resources :feeds, only: :index
+      resources :messages, except: :update
     end
   end
   namespace :files do
