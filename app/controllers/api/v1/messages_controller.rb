@@ -1,4 +1,17 @@
 class Api::V1::MessagesController < Api::V1::ApiController
+  api! "대화 상대 목록을 전달한다."
+  example <<-EOS
+  {
+    "contacts": [
+      {"id": 1, "username": "user", "name": "상대방", "profileImageUri": "http://placehold.it/100x100"},
+      ...
+    ]
+  }
+  EOS
+  def contacts
+    @contacts = Contact.where(user_id: @user.id).includes(:contact).map(&:contact)
+  end
+
   DEFAULT_LIMIT = 10
   api! "쪽지 목록을 전달한다."
   param :contactId, Integer, desc: "쪽지를 주고받은 상대방의 User ID", required: true
@@ -37,6 +50,8 @@ class Api::V1::MessagesController < Api::V1::ApiController
       content: params[:content]
     )
     if @message.save
+      Contact.find_or_create_by(user_id: @user.id, contact_id: params[:contactId])
+      Contact.find_or_create_by(user_id: params[:contactId], contact_id: @user.id)
       render :show, status: :created
     else
       render json: @message.errors, status: :bad_request
