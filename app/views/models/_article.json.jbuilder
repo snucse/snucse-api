@@ -14,3 +14,6 @@ json.writer do
 end
 json.files article.attachments, partial: "models/attachment", as: :attachment
 json.tags article.article_tags, partial: "models/article_tag", as: :article_tag
+if article.survey
+  json.survey_id article.survey.id
+end

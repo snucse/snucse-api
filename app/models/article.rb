@@ -9,6 +9,7 @@ class Article < ApplicationRecord
   has_many :comments
   has_one :last_comment, -> { where(parent_comment_id: nil).order(id: :desc) }, class_name: Comment
   has_many :attachments
+  has_one :survey
 
   validates :anonymous_name, presence: true, if: "writer_id.nil?"
   has_secure_password validations: false
