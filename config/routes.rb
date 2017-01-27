@@ -66,6 +66,11 @@ Rails.application.routes.draw do
           get :contacts
         end
       end
+      resources :surveys, except: [:index, :update] do
+        member do
+          post :vote
+        end
+      end
     end
   end
   namespace :files do
