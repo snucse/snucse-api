@@ -31,8 +31,8 @@ class Api::V1::SurveysController < Api::V1::ApiController
   param :title, String, desc: "설문조사의 제목", required: true
   param :showResultType, ["public", "voter", "finish"], desc: "결과 공개 설정(전체공개/투표자에게 공개/종료 후 공개)", required: true
   param :isAnonymous, ["true", "false"], desc: "익명 설문조사 여부(true/false)", required: true
-  param :startTime, /^[0-9]{4}=[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/, desc: "설문조사 시작 시각, 설정하지 않은 경우 현재 시각", required: false
-  param :endTime, /^[0-9]{4}=[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/, desc: "설문조사 종료 시각", required: true
+  param :startTime, /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/, desc: "설문조사 시작 시각, 설정하지 않은 경우 현재 시각", required: false
+  param :endTime, /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/, desc: "설문조사 종료 시각", required: true
   param :content, String, desc: "설문조사의 내용", required: true
   def create
     @survey = Survey.new(
