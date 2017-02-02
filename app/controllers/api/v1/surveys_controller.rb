@@ -33,7 +33,11 @@ class Api::V1::SurveysController < Api::V1::ApiController
   param :isAnonymous, ["true", "false"], desc: "익명 설문조사 여부(true/false)", required: true
   param :startTime, /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/, desc: "설문조사 시작 시각, 설정하지 않은 경우 현재 시각", required: false
   param :endTime, /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/, desc: "설문조사 종료 시각", required: true
-  param :content, String, desc: "설문조사의 내용", required: true
+  param :content, Array, desc: "설문조사의 내용", required: true do
+    param :question, String, desc: "질문의 제목", required: true, empty: false
+    param :type, ["select-one", "select-many"], desc: "질문의 유형", required: true
+    param :choices, Array, of: String, desc: "선택 항목", required: true
+  end
   def create
     @survey = Survey.new(
       creator_id: @user.id,
@@ -41,17 +45,14 @@ class Api::V1::SurveysController < Api::V1::ApiController
       title: params[:title],
       start_time: params[:startTime] || DateTime.now,
       end_time: params[:endTime],
-      content: params[:content]
+      content: params[:content].to_json
     )
     @survey.set_anonymous if params[:isAnonymous] == "true"
     @survey.set_show_result_type(params[:showResultType])
-    if @survey.valid_content?
-      @survey.save
+    if @survey.save
       render :show, status: :created
     else
-      render status: :bad_request, json: {
-        errors: "malformed content"
-      }
+      render json: @survey.errors, status: :bad_request
     end
   end
 

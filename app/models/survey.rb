@@ -27,25 +27,6 @@ class Survey < ApplicationRecord
     self.survey_type |= show_result_type if show_result_type
   end
 
-  def valid_content?
-    begin
-      data = JSON.parse(self.content)
-      return false unless data.is_a? Array
-      return false if data.empty?
-      data.each do |question|
-        return false unless question.is_a? Hash
-        return false unless question["question"].is_a? String
-        return false unless ["select-one", "select-many"].include? question["type"]
-        choices = question["choices"]
-        return false unless choices.is_a? Array
-        return false unless choices.all? {|x| x.is_a? String}
-      end
-      true
-    rescue
-      false
-    end
-  end
-
   def add_vote(vote_content)
     begin
       data = JSON.parse(self.content).zip(JSON.parse(vote_content)).map do |question, answer|

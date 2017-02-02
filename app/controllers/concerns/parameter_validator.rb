@@ -127,4 +127,28 @@ module ParameterValidator
       "Must be #{@type}."
     end
   end
+  class NestedValidator < Apipie::Validator::BaseValidator # for Rails 5 fix
+    def initialize(param_description, argument, param_group)
+      super(param_description)
+      @validator = Apipie::Validator::HashValidator.new(param_description, argument, param_group)
+      @type = argument
+    end
+
+    def validate(value)
+      value ||= []
+      return false if value.class != Array
+      value.each do |child|
+        return false unless @validator.validate(child.to_unsafe_h)
+      end
+      true
+    end
+
+    def self.build(param_description, argument, options, block)
+      self.new(param_description, block, options[:param_group]) if block.is_a?(Proc) && block.arity <= 0 && argument == Array
+    end
+
+    def description
+      "Must be an Array of nested elements"
+    end
+  end
 end
