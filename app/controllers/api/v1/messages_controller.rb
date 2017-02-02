@@ -14,7 +14,7 @@ class Api::V1::MessagesController < Api::V1::ApiController
 
   DEFAULT_LIMIT = 10
   api! "쪽지 목록을 전달한다."
-  param :contactId, Integer, desc: "쪽지를 주고받은 상대방의 User ID", required: true
+  param :contactId, String, desc: "쪽지를 주고받은 상대방의 username", required: true
   param :sinceId, Integer, desc: "설정된 경우 ID가 이 값보다 큰 결과만 보낸다.", required: false
   param :maxId, Integer, desc: "설정된 경우 ID가 이 값 이하인 결과만 보낸다.", required: false
   param :limit, Integer, desc: "결과의 최대 개수, 기본값은 10이다.", required: false
@@ -33,25 +33,26 @@ class Api::V1::MessagesController < Api::V1::ApiController
   }
   EOS
   def index
-    @contact = User.find(params[:contactId])
+    @contact = User.find_by_username!(params[:contactId])
     limit = params[:limit] || DEFAULT_LIMIT
-    @messages = Message.where(sender_id: @user.id, receiver_id: params[:contactId]).sender_not_deleted.or(Message.where(sender_id: params[:contactId], receiver_id: @user.id).receiver_not_deleted).limit(limit)
+    @messages = Message.where(sender_id: @user.id, receiver_id: @contact.id).sender_not_deleted.or(Message.where(sender_id: @contact.id, receiver_id: @user.id).receiver_not_deleted).limit(limit)
     @messages = @messages.where("id > ?", params[:sinceId]) if params[:sinceId]
     @messages = @messages.where("id <= ?", params[:maxId]) if params[:maxId]
   end
 
   api! "쪽지를 생성한다."
-  param :contactId, Integer, desc: "쪽지를 받을 상대방의 User ID", required: true
+  param :contactId, String, desc: "쪽지를 받을 상대방의 username", required: true
   param :content, String, desc: "쪽지 내용", required: true, empty: false
   def create
+    contact = User.find_by_username!(params[:contactId])
     @message = Message.new(
       sender_id: @user.id,
-      receiver_id: params[:contactId],
+      receiver_id: contact.id,
       content: params[:content]
     )
     if @message.save
-      Contact.find_or_create_by(user_id: @user.id, contact_id: params[:contactId])
-      Contact.find_or_create_by(user_id: params[:contactId], contact_id: @user.id)
+      Contact.find_or_create_by(user_id: @user.id, contact_id: contact.id)
+      Contact.find_or_create_by(user_id: contact.id, contact_id: @user.id)
       render :show, status: :created
     else
       render json: @message.errors, status: :bad_request
