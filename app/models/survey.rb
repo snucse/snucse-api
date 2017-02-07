@@ -18,6 +18,10 @@ class Survey < ApplicationRecord
     self.survey_type |= TYPE_ANONYMOUS
   end
 
+  def show_result_type
+    ["public", "voter", "finish"][self.survey_type & TYPE_SHOW_RESULT_MASK]
+  end
+
   def set_show_result_type(label)
     show_result_type = {
       "public" => 0,

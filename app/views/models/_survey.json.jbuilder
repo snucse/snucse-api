@@ -1,4 +1,4 @@
-json.(survey, :id, :article_id, :title, :start_time, :end_time)
+json.(survey, :id, :article_id, :title, :start_time, :end_time, :show_result_type)
 json.creator do
   json.partial! "models/user", user: survey.creator
 end
