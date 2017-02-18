@@ -29,6 +29,10 @@ Rails.application.routes.draw do
           post :transfer
           post :add_tag
           post :destroy_tag
+          post :star, action: :add_star
+          delete :star, action: :destroy_star
+          post :tab, action: :add_to_tab
+          delete :tab, action: :remove_from_tab
         end
       end
       resources :profile_comments do

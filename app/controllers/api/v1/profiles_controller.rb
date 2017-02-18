@@ -162,4 +162,48 @@ class Api::V1::ProfilesController < Api::V1::ApiController
     tag.check_and_deactivate
     render :show
   end
+
+  api! "팔로우 중인 프로필을 즐겨찾기한다."
+  error code: 400, desc: "팔로우 중이 아닌 프로필을 즐겨찾기 시도했거나, 이미 즐겨찾기 중인 프로필인 경우"
+  def add_star
+    profile_id = Profile.find_by_sid!(params[:id]).id
+    follow = Follow.where(user_id: @user.id, profile_id: profile_id).first
+    render json: {}, status: :bad_request and return if follow.nil? or follow.star
+    follow.update_attributes(star: true)
+    render json: {}
+  end
+
+  api! "팔로우 중인 프로필을 즐겨찾기 취소한다."
+  error code: 400, desc: "팔로우 중이 아닌 프로필을 즐겨찾기 취소 시도했거나, 즐겨찾기 중인 프로필이 아닌 경우, 또는 탭에 등록된 경우"
+  def destroy_star
+    profile_id = Profile.find_by_sid!(params[:id]).id
+    follow = Follow.where(user_id: @user.id, profile_id: profile_id).first
+    render json: {}, status: :bad_request and return if follow.nil? or !follow.star or follow.tab
+    follow.update_attributes(star: false)
+    render json: {}
+  end
+
+  api! "즐겨찾기 중인 프로필을 탭에 등록한다."
+  error code: 400, desc: "팔로우 중이 아니거나 즐겨찾기 중이 아닌 프로필을 등록 시도했거나, 이미 탭에 등록된 프로필인 경우"
+  def add_to_tab
+    profile_id = Profile.find_by_sid!(params[:id]).id
+    follow = Follow.where(user_id: @user.id, profile_id: profile_id).first
+    render json: {}, status: :bad_request and return if follow.nil? or !follow.star or follow.tab
+    tab_index = Follow.where(user_id: @user.id).where.not(tab: nil).count
+    follow.update_attributes(tab: tab_index)
+    render json: {}
+  end
+
+  api! "탭에 등록된 프로필을 해제한다."
+  error code: 400, desc: "팔로우 중이 아닌 프로필을 즐겨찾기 취소 시도했거나, 탭에 등록된 프로필이 아닌 경우"
+  def remove_from_tab
+    profile_id = Profile.find_by_sid!(params[:id]).id
+    follow = Follow.where(user_id: @user.id, profile_id: profile_id).first
+    render json: {}, status: :bad_request and return if follow.nil? or follow.tab.nil?
+    follow.update_attributes(tab: nil)
+    Follow.where(user_id: @user.id).where.not(tab: nil).order(:tab).each_with_index do |follow, i|
+      follow.update_attributes(tab: i)
+    end
+    render json: {}
+  end
 end
