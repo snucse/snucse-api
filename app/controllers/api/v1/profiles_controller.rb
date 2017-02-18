@@ -24,8 +24,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   }
   EOS
   def following
-    @profiles = @user.profiles
-    render action: :index
+    @follows = @user.follows.includes(profile: :admin)
   end
 
   api! "프로필을 조회한다."
