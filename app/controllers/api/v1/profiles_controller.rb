@@ -182,6 +182,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
     render json: {}
   end
 
+  MAX_TAB_COUNT = 2
   api! "즐겨찾기 중인 프로필을 탭에 등록한다."
   error code: 400, desc: "팔로우 중이 아니거나 즐겨찾기 중이 아닌 프로필을 등록 시도했거나, 이미 탭에 등록된 프로필인 경우"
   def add_to_tab
@@ -189,6 +190,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
     follow = Follow.where(user_id: @user.id, profile_id: profile_id).first
     render json: {}, status: :bad_request and return if follow.nil? or !follow.star or follow.tab
     tab_index = Follow.where(user_id: @user.id).where.not(tab: nil).count
+    render json: {}, status: :bad_request and return if tab_index >= MAX_TAB_COUNT
     follow.update_attributes(tab: tab_index)
     render json: {}
   end
