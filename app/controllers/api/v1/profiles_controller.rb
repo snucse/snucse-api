@@ -90,6 +90,12 @@ class Api::V1::ProfilesController < Api::V1::ApiController
         profile_id: @profile.id
       )
       @following = true
+      Activity.create(
+        actor_id: @user.id,
+        profile_id: @profile.id,
+        target: @profile,
+        action: "create"
+      )
       render :show, status: :created
     else
       render json: @profile.errors, status: :bad_request
@@ -142,10 +148,16 @@ class Api::V1::ProfilesController < Api::V1::ApiController
     check_profile(@profile)
     tag = Tag.create_with(creator_id: @user.id).find_or_create_by(name: params[:tag])
     tag.update_attributes(active: true)
-    ProfileTag.create!(
+    profile_tag = ProfileTag.create!(
       profile_id: @profile.id,
       tag_id: tag.id,
       writer_id: @user.id
+    )
+    Activity.create(
+      actor_id: @user.id,
+      profile_id: @profile.id,
+      target: profile_tag,
+      action: "create"
     )
     @profile.reload
     render :show
@@ -157,7 +169,9 @@ class Api::V1::ProfilesController < Api::V1::ApiController
     @profile = Profile.find_by_sid! params[:id]
     check_profile(@profile)
     tag = Tag.find_by_name! params[:tag]
-    @profile.tags.destroy tag
+    profile_tag = ProfileTag.where(profile: @profile, tag: tag).first
+    Activity.where(target: profile_tag).destroy_all
+    profile_tag.destroy
     tag.check_and_deactivate
     render :show
   end

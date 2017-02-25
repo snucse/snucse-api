@@ -76,6 +76,12 @@ class Api::V1::ArticlesController < Api::V1::ApiController
     @article.id = get_uid(profiles.first.name, params[:title]) if Rails.env.production?
     @article.set_rendering_mode(params[:renderingMode])
     if @article.save
+      Activity.create(
+        actor_id: @user.id,
+        article_id: @article.id,
+        target: @article,
+        action: "create"
+      )
       if params[:files]
         params[:files].each do |file|
           Attachment.create(
@@ -108,6 +114,12 @@ class Api::V1::ArticlesController < Api::V1::ApiController
       title: params[:title],
       content: params[:content]
     )
+      Activity.create(
+        actor_id: @user.id,
+        article_id: @article.id,
+        target: @article,
+        action: "update"
+      )
       @article.attachments.where.not(id: params[:fileIds]).destroy_all
       if params[:files]
         params[:files].each do |file|
@@ -132,6 +144,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
       render_unauthorized and return
     end
     @article.attachments.destroy_all
+    Activity.where(article_id: @article.id).destroy_all
     @article.destroy
     head :no_content
   end
@@ -143,10 +156,16 @@ class Api::V1::ArticlesController < Api::V1::ApiController
     check_article(@article)
     tag = Tag.create_with(creator_id: @user.id).find_or_create_by(name: params[:tag])
     tag.update_attributes(active: true)
-    ArticleTag.create!(
+    article_tag = ArticleTag.create!(
       article_id: @article.id,
       tag_id: tag.id,
       writer_id: @user.id
+    )
+    Activity.create(
+      actor_id: @user.id,
+      article_id: @article.id,
+      target: article_tag,
+      action: "create"
     )
     @article.reload
     render :show
@@ -158,7 +177,9 @@ class Api::V1::ArticlesController < Api::V1::ApiController
     @article = Article.find params[:id]
     check_article(@article)
     tag = Tag.find_by_name! params[:tag]
-    @article.tags.destroy tag
+    article_tag = ArticleTag.where(article: @article, tag: tag).first
+    Activity.where(target: article_tag).destroy_all
+    article_tag.destroy
     tag.check_and_deactivate
     render :show
   end

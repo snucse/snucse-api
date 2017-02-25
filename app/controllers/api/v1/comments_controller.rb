@@ -77,6 +77,12 @@ class Api::V1::CommentsController < Api::V1::ApiController
       content: params[:content]
     )
     if @comment.save
+      Activity.create(
+        actor_id: @user.id,
+        article_id: article.id,
+        target: @comment,
+        action: "create"
+      )
       render :show, status: :created
     else
       render json: @comment.errors, status: :bad_request
@@ -94,6 +100,12 @@ class Api::V1::CommentsController < Api::V1::ApiController
     if @comment.update(
       content: params[:content]
     )
+      Activity.create(
+        actor_id: @user.id,
+        article_id: @comment.article.id,
+        target: @comment,
+        action: "update"
+      )
       render :show
     else
       render json: @comment.errors, status: :bad_request
@@ -107,6 +119,7 @@ class Api::V1::CommentsController < Api::V1::ApiController
     if @user != @comment.writer
       render_unauthorized and return
     end
+    Activity.where(target: @comment).destroy_all
     @comment.destroy
     head :no_content
   end
