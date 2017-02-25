@@ -75,6 +75,7 @@ Rails.application.routes.draw do
           post :vote
         end
       end
+      resources :activities, only: :index
     end
   end
   namespace :files do
