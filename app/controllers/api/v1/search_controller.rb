@@ -6,7 +6,9 @@ class Api::V1::SearchController < Api::V1::ApiController
     q = params[:q]
     limit = params[:limit] || 5
     @articles = Article.search(q).per(limit).records
-    @comments = Comment.search(q).per(limit).records.includes(:article)
+    comments = Comment.search(q).per(limit).records
+    @comments_total = comments.total
+    @comments = comments.includes(:article)
     @profiles = Profile.search(q).per(limit).records
     @tags = Tag.search(q).per(limit).records
   end
@@ -30,7 +32,9 @@ class Api::V1::SearchController < Api::V1::ApiController
     q = params[:q]
     page = params[:page] || 1
     limit = params[:limit] || 10
-    @comments = Comment.search(q).page(page).per(limit).records.includes(:article)
+    comments = Comment.search(q).page(page).per(limit).records
+    @comments_total = comments.total
+    @comments = comments.includes(:article)
   end
 
   api! "프로필 검색 결과를 전달한다."

@@ -3,7 +3,7 @@ json.articles do
   json.data @articles, partial: "models/article", as: :article
 end
 json.comments do
-  json.count @comments.total
+  json.count @comments_total
   json.data @comments do |comment|
     json.partial! "models/comment", comment: comment
     json.article do
