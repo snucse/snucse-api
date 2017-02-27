@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       resources :profiles, except: :destroy do
         collection do
           get :following
+          get :autocomplete
         end
         member do
           post :follow

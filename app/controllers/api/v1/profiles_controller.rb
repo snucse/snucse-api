@@ -1,7 +1,7 @@
 class Api::V1::ProfilesController < Api::V1::ApiController
   include AccessControl
   skip_before_action :check_user_level, only: [:following, :show, :add_tag, :destroy_tag]
-  api! "프로필 목록을 전달한다."
+  api! "그룹 프로필 목록을 전달한다."
   example <<-EOS
   {
     "profiles": [
@@ -12,6 +12,15 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   EOS
   def index
     @profiles = Profile.group_profiles.includes(:admin)
+  end
+
+  DEFAULT_LIMIT = 10
+  api! "특정 문자열로 시작하는 프로필 목록을 전달한다."
+  param :prefix, String, desc: "검색 대상 문자열", required: true
+  param :limit, Integer, desc: "검색 결과의 최대 개수, 기본값은 10", required: false
+  def autocomplete
+    limit = params[:limit] || DEFAULT_LIMIT
+    @profiles = Profile.where("name like ?", "#{params[:prefix]}%").limit(limit)
   end
 
   api! "자신이 팔로우하고 있는 프로필 목록을 전달한다."
