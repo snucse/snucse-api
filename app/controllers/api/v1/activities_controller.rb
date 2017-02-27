@@ -8,6 +8,7 @@ class Api::V1::ActivitiesController < Api::V1::ApiController
   param :limit, Integer, desc: "결과의 최대 개수, 기본값은 10", required: false
   example <<-EOS
   {
+    "count": 123,
     "activities": [
       {"id": 10, "type": "Profile", "action": "create", "profile": {"id": "_17", "name": "17학번 모임"}, "actor": {...}, "createdAt": "..."}, // 프로필 생성
       {"id": 9, "type": "Article", "action": "create", "article": {"id": 123, "title": "글제목"}, "actor": {...}, "createdAt": "..."}, // 글 작성
@@ -26,12 +27,14 @@ class Api::V1::ActivitiesController < Api::V1::ApiController
   def index
     limit = (params[:limit] || DEFAULT_LIMIT).to_i
     offset = limit * ((params[:page] || 1).to_i - 1)
-    @activities = Activity.all.includes(:actor, :profile, :article).limit(limit).offset(offset)
+    @activities = Activity.all.includes(:actor, :profile, :article)
     if params[:profileId]
       profile = Profile.find_by_sid!(params[:profileId])
       @activities = @activities.joins("LEFT OUTER JOIN articles_profiles ON activities.article_id = articles_profiles.article_id").where("activities.profile_id = ? OR articles_profiles.profile_id = ?", profile.id, profile.id)
     end
     @activities = @activities.where(target_type: params[:filterType]) if params[:filterType]
     @activities = @activities.where(action: params[:filterAction]) if params[:filterAction]
+    @count = @activities.count
+    @activities = @activities.limit(limit).offset(offset)
   end
 end
