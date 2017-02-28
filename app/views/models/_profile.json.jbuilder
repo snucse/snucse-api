@@ -1,7 +1,6 @@
-json.(profile, :name, :comment_count)
+json.(profile, :name, :description, :rendered_description, :comment_count)
 json.id profile.sid
 json.rendering_mode profile.rendering_mode_label
-json.description profile.rendered_description
 json.admin do
   json.(profile.admin, :id, :username, :name)
 end
