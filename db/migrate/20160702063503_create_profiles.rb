@@ -6,6 +6,7 @@ class CreateProfiles < ActiveRecord::Migration
       t.integer :profile_type, null: false
       t.integer :admin_id
       t.text :description
+      t.integer :rendering_mode, null: false
       t.boolean :is_public, default: false
       t.integer :comment_count, default: 0
 
