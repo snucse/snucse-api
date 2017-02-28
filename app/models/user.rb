@@ -22,8 +22,12 @@ class User < ApplicationRecord
   end
 
   def profile_image_uri
-    hash = "?#{Digest::SHA256.hexdigest(self.profile_image.thumb.read)[0..7]}" rescue nil
-    "/files/profile_images/#{self.username}#{hash}"
+    if self.profile_image.file.nil?
+      "/files/profile_images/default"
+    else
+      hash = "?#{Digest::SHA256.hexdigest(self.profile_image.thumb.read)[0..7]}" rescue nil
+      "/files/profile_images/#{self.username}#{hash}"
+    end
   end
 
   def set_information(new_information)
