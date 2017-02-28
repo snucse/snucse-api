@@ -1,6 +1,7 @@
 json.feeds @feeds do |feed|
   json.type "article"
   json.partial! "models/article", article: feed
+  json.feed_content sanitize(feed.rendered_content)
   json.last_comment do
     json.partial! "models/comment", comment: feed.last_comment
     if feed.last_comment and feed.last_comment.last_reply
