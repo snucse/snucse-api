@@ -82,6 +82,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   param :id, /^[A-Za-z_][A-Za-z0-9_]*$/, desc: "주소 등에서 쓰일 프로필의 식별자", required: true
   param :name, String, desc: "프로필의 이름", required: true, empty: false
   param :description, String, desc: "프로필 대문에 표시될 내용", required: true, empty: false
+  param :renderingMode, ["text", "md"], desc: "프로필 대문 렌더링 모드(텍스트/markdown/html)", required: true, empty: false
   def create
     if Profile.where(sid: params[:id]).any? or ReservedWord.where(word: params[:id]).any?
       render json: {}, status: :bad_request and return
@@ -93,6 +94,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
       admin_id: @user.id,
       description: params[:description]
     )
+    @profile.set_rendering_mode(params[:renderingMode])
     if @profile.save
       Follow.create(
         user_id: @user.id,
@@ -114,6 +116,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   api! "프로필을 수정한다."
   param :name, String, desc: "프로필의 이름", required: false, empty: false
   param :description, String, desc: "프로필 대문에 표시될 내용", required: false, empty: false
+  param :renderingMode, ["text", "md"], desc: "프로필 대문 렌더링 모드(텍스트/markdown/html)", required: true, empty: false
   error code: 401, desc: "자신이 관리자가 아닌 프로필을 수정하려고 하는 경우"
   def update
     @profile = Profile.find_by_sid! params[:id]
@@ -122,6 +125,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
     end
     @profile.name = params[:name] if params[:name]
     @profile.description = params[:description] if params[:description]
+    @profile.set_rendering_mode(params[:renderingMode])
     if @profile.save
       render :show
     else

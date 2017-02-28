@@ -27,4 +27,30 @@ class Profile < ApplicationRecord
   def user?
     self.profile_type == TYPE_USER
   end
+
+  def rendering_mode_label
+    [nil, "text", "md", "html"][self.rendering_mode]
+  end
+
+  def rendered_description
+    case self.rendering_mode
+    when 1
+      CGI.escapeHTML(self.description).gsub("\n", "<br>")
+    when 2
+      renderer = Redcarpet::Render::HTML.new
+      markdown = Redcarpet::Markdown.new(renderer, tables: true, strikethrough: true)
+      markdown.render(self.description)
+    else
+      self.description
+    end
+  end
+
+  def set_rendering_mode(label)
+    self.rendering_mode = {
+      "text" => 1,
+      "md" => 2,
+      "html" => 3
+    }[label]
+    self.rendering_mode ||= 1
+  end
 end
