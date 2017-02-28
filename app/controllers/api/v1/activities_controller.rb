@@ -17,9 +17,9 @@ class Api::V1::ActivitiesController < Api::V1::ApiController
       {"id": 6, "type": "Comment", "action": "update", "article": {"id": 123, "title": "글제목"}, "actor": {...}, "createdAt": "..."}, // 댓글 수정
       {"id": 5, "type": "ProfileComment", "action": "create", "profile": {"id": "_17", "name": "17학번 모임"}, "actor": {...}, "createdAt": "..."}, // 프로필 댓글 작성
       {"id": 4, "type": "ProfileComment", "action": "update", "profile": {"id": "_17", "name": "17학번 모임"}, "actor": {...}, "createdAt": "..."}, // 프로필 댓글 수정
-      {"id": 3, "type": "ArticleTag", "action": "create", "article": {"id": 123, "title": "글제목"}, "actor": {...}, "createdAt": "..."}, // 태그 등록
-      {"id": 2, "type": "ImageTag", "action": "create", "article": {"id": 123, "title": "글제목"}, "actor": {...}, "createdAt": "..."}, // 이미지 태그 등록
-      {"id": 1, "type": "ProfileTag", "action": "create", "profile": {"id": "_17", "name": "17학번 모임"}, "actor": {...}, "createdAt": "..."}, // 프로필 태그 등록
+      {"id": 3, "type": "ArticleTag", "action": "create", "article": {"id": 123, "title": "글제목"}, "actor": {...}, "tag": "tag", "createdAt": "..."}, // 태그 등록
+      {"id": 2, "type": "ImageTag", "action": "create", "article": {"id": 123, "title": "글제목"}, "actor": {...}, "tag": "tag", "createdAt": "..."}, // 이미지 태그 등록
+      {"id": 1, "type": "ProfileTag", "action": "create", "profile": {"id": "_17", "name": "17학번 모임"}, "actor": {...}, "tag": "tag", "createdAt": "..."}, // 프로필 태그 등록
       ...
     ]
   }
@@ -36,5 +36,8 @@ class Api::V1::ActivitiesController < Api::V1::ApiController
     @activities = @activities.where(action: params[:filterAction]) if params[:filterAction]
     @count = @activities.count
     @activities = @activities.limit(limit).offset(offset)
+    tag_id_map = @activities.where(target_type: ["ArticleTag", "ProfileTag", "ImageTag"]).includes(:target).map{|x| [x.id, x.target.tag_id]}.to_h
+    tag_name_map = Tag.find(tag_id_map.values).map{|x| [x.id, x.name]}.to_h
+    @tag_map = tag_id_map.map{|k, v| [k, tag_name_map[v]]}.to_h
   end
 end
