@@ -25,6 +25,8 @@ module Snucse
     config.time_zone = 'Seoul'
 
     Jbuilder.key_format camelize: :lower
+
+    CarrierWave::SanitizedFile.sanitize_regexp = /[^[:word:]\.\-\+]/
   end
 end
 

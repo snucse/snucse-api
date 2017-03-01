@@ -5,7 +5,7 @@ class FilesController < ApplicationController
     if attachment.file_identifier != params[:file]
       render json: {}, status: :not_found and return
     end
-    send_file(attachment.file.url, disposition: "inline")
+    send_file(attachment.file.current_path, disposition: "inline")
   end
 
   api! "프로필 이미지를 조회한다."
@@ -16,7 +16,7 @@ class FilesController < ApplicationController
     else
       user = User.find_by_username! params[:username]
       url = "#{Rails.root}/public/default.png"
-      url = user.profile_image.thumb.url unless user.profile_image.thumb.file.nil?
+      url = user.profile_image.thumb.current_path unless user.profile_image.thumb.file.nil?
       send_file(url, disposition: "inline")
     end
   end
