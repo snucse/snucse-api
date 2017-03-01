@@ -196,6 +196,8 @@ class Api::V1::ArticlesController < Api::V1::ApiController
     expire = DateTime.now.beginning_of_day.to_i + 60 * 60 * 24
     $redis.expireat(key, expire)
     @article.increment(:recommendation_count).save
+    recommendation = RecommendationCount.find_or_create_by(article_id: @article.id, date: Date.current)
+    recommendation.increment(:count).save
     render :show
   end
 end
