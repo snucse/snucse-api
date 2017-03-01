@@ -11,7 +11,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
   }
   EOS
   def index
-    @profiles = Profile.group_profiles.includes(:admin)
+    @profiles = Profile.group_profiles.includes(:admin).order(updated_at: :desc)
   end
 
   DEFAULT_LIMIT = 10

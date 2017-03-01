@@ -75,6 +75,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
     )
     @article.set_rendering_mode(params[:renderingMode])
     if @article.save
+      @article.profiles.each(&:touch)
       Activity.create(
         actor_id: @user.id,
         article_id: @article.id,
@@ -113,6 +114,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
       title: params[:title],
       content: params[:content]
     )
+      @article.profiles.each(&:touch)
       Activity.create(
         actor_id: @user.id,
         article_id: @article.id,
