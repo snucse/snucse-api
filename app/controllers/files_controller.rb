@@ -20,4 +20,11 @@ class FilesController < ApplicationController
       send_file(url, disposition: "inline")
     end
   end
+
+  api! "구 스누씨 형식 URL로 된 파일을 조회한다."
+  def show_legacy
+    legacy_object = LegacyObject.find_by_uid(params[:uid])
+    render nothing: true, status: :not_found if legacy_object.nil? or legacy_object.target_type != "Attachment"
+    send_file(legacy_object.target.file.current_path, disposition: "inline")
+  end
 end

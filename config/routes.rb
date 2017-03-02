@@ -83,4 +83,5 @@ Rails.application.routes.draw do
     get "/profile_images/:username", action: :show_profile_image
     get "/:key/:file", action: :show, file: /.*/
   end
+  get "/File/Download.aspx", to: "files#show_legacy"
 end
