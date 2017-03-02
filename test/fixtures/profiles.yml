@@ -3,6 +3,7 @@ admin:
   profile_type: 2
   admin: admin
   description: ""
+  rendering_mode: 1
   sid: "admin"
 
 other:
@@ -10,6 +11,7 @@ other:
   profile_type: 2
   admin: other
   description: ""
+  rendering_mode: 1
   sid: "other"
 
 _16:
@@ -17,4 +19,5 @@ _16:
   profile_type: 1
   admin: admin
   description: ""
+  rendering_mode: 1
   sid: "_16"
