@@ -1,7 +1,7 @@
 if profile_comment.nil?
   json.null!
 else
-  json.(profile_comment, :id, :content, :recommendation_count, :created_at)
+  json.(profile_comment, :id, :content, :rendered_content, :recommendation_count, :created_at)
   if profile_comment.parent_comment_id
     json.(profile_comment, :parent_comment_id)
   end

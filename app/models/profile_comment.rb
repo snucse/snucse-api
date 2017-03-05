@@ -1,4 +1,5 @@
 class ProfileComment < ApplicationRecord
+  include AutoLink
   belongs_to :writer, class_name: User
   belongs_to :profile
   has_many :replies, class_name: ProfileComment, foreign_key: :parent_comment_id
@@ -6,6 +7,10 @@ class ProfileComment < ApplicationRecord
   belongs_to :parent_comment, class_name: ProfileComment
   after_create :increment_count
   after_destroy :decrement_count
+
+  def rendered_content
+    auto_link(CGI.escapeHTML(self.content))
+  end
 
 private
 
