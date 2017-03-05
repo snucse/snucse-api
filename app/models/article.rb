@@ -35,7 +35,7 @@ class Article < ApplicationRecord
       self.content
     end
     self.attachments.each do |attachment|
-      content.gsub("[?#{attachment.file_identifier}?]", attachment.path)
+      content.gsub!("[?#{attachment.file_identifier}?]", attachment.path)
     end
     content
   end
