@@ -1,5 +1,6 @@
 class Comment < ApplicationRecord
   include LegacyPassword
+  include AutoLink
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
   belongs_to :writer, class_name: User
@@ -16,6 +17,10 @@ class Comment < ApplicationRecord
 
   def anonymous?
     self.writer_id.nil?
+  end
+
+  def rendered_content
+    auto_link(CGI.escapeHTML(self.content))
   end
 
 private

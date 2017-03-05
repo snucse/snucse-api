@@ -1,5 +1,6 @@
 class Article < ApplicationRecord
   include LegacyPassword
+  include AutoLink
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
   belongs_to :writer, class_name: User
@@ -25,7 +26,7 @@ class Article < ApplicationRecord
   def rendered_content
     case self.rendering_mode
     when 1
-      CGI.escapeHTML(self.content).gsub("\n", "<br>")
+      auto_link(CGI.escapeHTML(self.content).gsub("\n", "<br>"))
     when 2
       renderer = Redcarpet::Render::HTML.new
       markdown = Redcarpet::Markdown.new(renderer, tables: true, strikethrough: true)
