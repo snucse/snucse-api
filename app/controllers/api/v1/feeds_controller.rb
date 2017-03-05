@@ -15,7 +15,7 @@ class Api::V1::FeedsController < Api::V1::ApiController
   EOS
   def index
     limit = params[:limit] || DEFAULT_LIMIT
-    @feeds = @user.feeds.includes(:profiles, :writer, :survey, last_comment: :last_reply).order(id: :desc).limit(limit)
+    @feeds = @user.feeds.includes(:profiles, :writer, :survey, :attachments, last_comment: :last_reply).order(id: :desc).limit(limit)
     @feeds = @feeds.where("articles.id > ?", params[:sinceId]) if params[:sinceId]
     @feeds = @feeds.where("articles.id <= ?", params[:maxId]) if params[:maxId]
   end

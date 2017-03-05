@@ -24,7 +24,7 @@ class Article < ApplicationRecord
   end
 
   def rendered_content
-    case self.rendering_mode
+    content = case self.rendering_mode
     when 1
       auto_link(CGI.escapeHTML(self.content).gsub("\n", "<br>"))
     when 2
@@ -34,6 +34,10 @@ class Article < ApplicationRecord
     else
       self.content
     end
+    self.attachments.each do |attachment|
+      content.gsub("[?#{attachment.file_identifier}?]", attachment.path)
+    end
+    content
   end
 
   def set_rendering_mode(label)
