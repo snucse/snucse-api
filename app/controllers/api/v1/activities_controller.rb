@@ -36,7 +36,7 @@ class Api::V1::ActivitiesController < Api::V1::ApiController
     @activities = @activities.where(action: params[:filterAction]) if params[:filterAction]
     @count = @activities.count
     @activities = @activities.limit(limit).offset(offset)
-    tag_id_map = @activities.where(target_type: ["ArticleTag", "ProfileTag", "ImageTag"]).includes(:target).map{|x| [x.id, x.target.tag_id]}.to_h
+    tag_id_map = @activities.includes(:target).select{|x| ["ArticleTag", "ProfileTag", "ImageTag"].include? x.target_type}.map{|x| [x.id, x.target.tag_id]}.to_h
     tag_name_map = Tag.find(tag_id_map.values).map{|x| [x.id, x.name]}.to_h
     @tag_map = tag_id_map.map{|k, v| [k, tag_name_map[v]]}.to_h
   end
