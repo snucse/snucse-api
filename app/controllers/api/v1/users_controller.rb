@@ -35,6 +35,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   param :name, String, desc: "사용자의 이름", required: true, empty: false
   param :birthday, /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/, desc: "생년월일", required: false
   param :bsNumber, /^[0-9]{4}-[0-9]{5}$/, desc: "학번", required: false
+  param :email, String, desc: "이메일", required: false
   param :phoneNumber, /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/, desc: "전화번호", required: false
   error code: 400, desc: "잘못된 회원 가입 요청"
   def sign_up
@@ -49,7 +50,8 @@ class Api::V1::UsersController < Api::V1::ApiController
     )
     user.set_information(
       bs_number: params[:bsNumber],
-      phone_number: [params[:phoneNumber]]
+      email: [{email: params[:email], public: true}],
+      phone_number: [{phone_number: params[:phoneNumber], public: true}]
     )
     if user.save
       render json: {}
