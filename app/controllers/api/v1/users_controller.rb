@@ -104,4 +104,12 @@ class Api::V1::UsersController < Api::V1::ApiController
     @user.save
     render json: {}
   end
+
+  api! "생일인 사용자의 목록을 전달한다."
+  param :date, /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/, desc: "생일인 사람의 목록을 구하는 날짜, 기본값은 오늘", required: false
+  def birthday
+    # TODO: 음력 생일 고려하기
+    date = params[:date].to_date rescue Date.today
+    @users = User.where(is_birthday_public: true, is_birthday_lunar: false).where("MONTH(birthday) = ? and DAYOFMONTH(birthday) = ?", date.month, date.day)
+  end
 end

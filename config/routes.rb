@@ -50,6 +50,7 @@ Rails.application.routes.draw do
         get :me
         post :profile_image, action: :upload_profile_image
         delete :profile_image, action: :destroy_profile_image
+        get :birthday
       end
       namespace :tags do
         get "", action: :index
