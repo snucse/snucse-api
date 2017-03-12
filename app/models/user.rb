@@ -34,9 +34,19 @@ class User < ApplicationRecord
     self.is_birthday_public and !self.is_birthday_lunar and !!self.birthday and self.birthday.strftime("%m-%d") == Date.today.strftime("%m-%d")
   end
 
+  def rendering_mode
+    key = "user:#{self.id}:rendering_mode"
+    $redis.get(key) || "md"
+  end
+
   def set_information(new_information)
     information = JSON.parse(self.information) rescue Hash.new
     information.merge! new_information
     self.information = JSON.generate(information)
+  end
+
+  def set_rendering_mode(rendering_mode)
+    key = "user:#{self.id}:rendering_mode"
+    $redis.set(key, rendering_mode)
   end
 end

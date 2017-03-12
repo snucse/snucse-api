@@ -74,6 +74,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
       content: params[:content]
     )
     @article.set_rendering_mode(params[:renderingMode])
+    @user.set_rendering_mode(params[:renderingMode])
     if @article.save
       @article.profiles.each(&:touch)
       Activity.create(
@@ -110,6 +111,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
       render_unauthorized and return
     end
     @article.set_rendering_mode(params[:renderingMode])
+    @user.set_rendering_mode(params[:renderingMode])
     if @article.update(
       title: params[:title],
       content: params[:content]

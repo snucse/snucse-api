@@ -95,6 +95,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
       description: params[:description]
     )
     @profile.set_rendering_mode(params[:renderingMode])
+    @user.set_rendering_mode(params[:renderingMode])
     if @profile.save
       Follow.create(
         user_id: @user.id,
@@ -126,6 +127,7 @@ class Api::V1::ProfilesController < Api::V1::ApiController
     @profile.name = params[:name] if params[:name]
     @profile.description = params[:description] if params[:description]
     @profile.set_rendering_mode(params[:renderingMode])
+    @user.set_rendering_mode(params[:renderingMode])
     if @profile.save
       render :show
     else

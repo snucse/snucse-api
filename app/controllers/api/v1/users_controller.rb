@@ -63,7 +63,12 @@ class Api::V1::UsersController < Api::V1::ApiController
   api! "로그인한 사용자의 정보를 전달한다."
   example <<-EOS
   {
-    "id": 1
+    "id": 1,
+    "level": 2,
+    "name": "사용자",
+    "username": "username",
+    "profileImageUri": "https://www.snucse.org/files/profile_images/default",
+    "renderingMode": "text"
   }
   EOS
   def me
