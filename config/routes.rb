@@ -8,6 +8,8 @@ Rails.application.routes.draw do
         member do
           post :add_tag
           post :destroy_tag
+          post :add_image_tag
+          post :destroy_image_tag
           post :recommend
         end
       end

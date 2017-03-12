@@ -187,6 +187,55 @@ class Api::V1::ArticlesController < Api::V1::ApiController
     render :show
   end
 
+  api! "글에 첨부된 이미지에 태그를 추가한다."
+  param :attachmentId, Integer, desc: "태그를 추가할 첨부파일의 ID", required: true
+  param :tag, String, desc: "추가할 태그", required: true, empty: false
+  param :left, Float, desc: "태그 시작 지점의 왼쪽 위치 (in %)", required: true
+  param :top, Float, desc: "태그 시작 지점의 위쪽 위치 (in %)", required: true
+  param :width, Float, desc: "태그 영역의 너비 (in %)", required: true
+  param :height, Float, desc: "태그 영역의 높이 (in %)", required: true
+  def add_image_tag
+    @article = Article.find params[:id]
+    check_article(@article)
+    attachment = Attachment.find(params[:attachmentId])
+    render json: {}, status: :bad_request and return unless attachment.article_id == @article.id
+    tag = Tag.create_with(creator_id: @user.id).find_or_create_by(name: params[:tag])
+    tag.update_attributes(active: true)
+    image_tag = ImageTag.create!(
+      attachment_id: attachment.id,
+      tag_id: tag.id,
+      writer_id: @user.id,
+      left: params[:left],
+      top: params[:top],
+      width: params[:width],
+      height: params[:height]
+    )
+    Activity.create(
+      actor_id: @user.id,
+      article_id: @article.id,
+      target: image_tag,
+      action: "create"
+    )
+    @article.reload
+    render :show
+  end
+
+  api! "글에 첨부된 이미지에서 태그를 삭제한다."
+  param :attachmentId, Integer, desc: "태그를 삭제할 첨부파일의 ID", required: true
+  param :tag, String, desc: "삭제할 태그", required: true, empty: false
+  def destroy_image_tag
+    @article = Article.find params[:id]
+    check_article(@article)
+    attachment = Attachment.find(params[:attachmentId])
+    render json: {}, status: :bad_request and return unless attachment.article_id == @article.id
+    tag = Tag.find_by_name! params[:tag]
+    image_tag = ImageTag.where(attachment_id: params[:attachmentId], tag: tag).first
+    Activity.where(target: image_tag).destroy_all
+    image_tag.destroy
+    tag.check_and_deactivate
+    render :show
+  end
+
   api! "글을 추천한다."
   error code: 400, desc: "이미 추천한 글을 다시 추천하려는 경우(1일 1회 제한)"
   def recommend
