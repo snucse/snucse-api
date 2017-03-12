@@ -30,6 +30,10 @@ class User < ApplicationRecord
     end
   end
 
+  def is_birthday
+    self.is_birthday_public and !self.is_birthday_lunar and !!self.birthday and self.birthday.strftime("%m-%d") == Date.today.strftime("%m-%d")
+  end
+
   def set_information(new_information)
     information = JSON.parse(self.information) rescue Hash.new
     information.merge! new_information
