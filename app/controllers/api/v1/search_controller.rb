@@ -4,7 +4,7 @@ class Api::V1::SearchController < Api::V1::ApiController
   param :limit, Integer, desc: "검색 결과의 최대 개수, 기본값은 5", required: false
   def index
     q = params[:q]
-    limit = params[:limit] || 5
+    limit = params[:limit] || 6
     @articles = Article.search(q).per(limit).records
     comments = Comment.search(q).per(limit).records
     @comments_total = comments.total
