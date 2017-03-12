@@ -48,6 +48,8 @@ Rails.application.routes.draw do
         post :sign_in
         post :sign_up
         get :me
+        put :update
+        put :password, action: :update_password
         post :profile_image, action: :upload_profile_image
         delete :profile_image, action: :destroy_profile_image
         get :birthday

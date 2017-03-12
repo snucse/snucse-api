@@ -69,17 +69,27 @@ class Api::V1::UsersController < Api::V1::ApiController
   def me
   end
 
+  api! "로그인한 사용자의 비밀번호를 변경한다."
+  param :currentPassword, String, desc: "현재 비밀번호", required: true, empty: false
+  param :newPassword, String, desc: "새 비밀번호", required: true, empty: false
+  def update_password
+    render_unauthorized and return unless @user.check_password(params[:currentPassword])
+    @user.password = params[:newPassword]
+    @user.save
+    render json: {}
+  end
+
   api! "로그인한 사용자의 정보를 변경한다."
-  param :password, String, desc: "사용할 비밀번호", required: false, empty: false
   param :birthday, /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/, desc: "생년월일", required: false
   param :bsNumber, /^[0-9]{4}-[0-9]{5}$/, desc: "학번", required: false
+  param :email, String, desc: "이메일", required: false
   param :phoneNumber, /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/, desc: "전화번호", required: false
   def update
-    @user.password = params[:password] if params[:password]
     @user.birthday = params[:birthday] if params[:birthday]
     @user.set_information(
       bs_number: params[:bsNumber],
-      phone_number: [params[:phoneNumber]]
+      email: [{email: params[:email], public: true}],
+      phone_number: [{phone_number: params[:phoneNumber], public: true}]
     )
     @user.save
     render json: {}
