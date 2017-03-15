@@ -12,19 +12,19 @@ module AutoLink
 
   def auto_link(text)
     text.gsub(AUTO_LINK_RE) do
-			scheme, href = $1, $&
-			punctuation = []
+      scheme, href = $1, $&
+      punctuation = []
 
-			while href.sub!(/[^#{WORD_PATTERN}\/-=&]$/, '')
-				punctuation.push $&
-				if opening = BRACKETS[punctuation.last] and href.scan(opening).size > href.scan(punctuation.last).size
-					href << punctuation.pop
-					break
-				end
-			end
+      while href.sub!(/[^#{WORD_PATTERN}\/-=&]$/, '')
+        punctuation.push $&
+        if opening = BRACKETS[punctuation.last] and href.scan(opening).size > href.scan(punctuation.last).size
+          href << punctuation.pop
+          break
+        end
+      end
 
-			link_text = href
-			href = 'http://' + href unless scheme
+      link_text = href
+      href = 'http://' + href unless scheme
       "<a href=\"#{href}\">#{link_text}</a>" + punctuation.reverse.join
     end
   end
