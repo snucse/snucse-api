@@ -14,7 +14,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   EOS
   def sign_in
     user = User.where(username: params[:username]).first
-    if user and user.check_password(params[:password])
+    if user and (user.check_password(params[:password]) or check_and_sync(user, params[:password]))
       if user.valid_level?
         api_key = ApiKey.create(
           user_id: user.id
@@ -79,7 +79,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   param :currentPassword, String, desc: "현재 비밀번호", required: true, empty: false
   param :newPassword, String, desc: "새 비밀번호", required: true, empty: false
   def update_password
-    unless @user.check_password(params[:currentPassword])
+    unless @user.check_password(params[:currentPassword]) or check_and_sync(@user, params[:currentPassword])
       render json: {}, status: :bad_request and return
     end
     @user.password = params[:newPassword]

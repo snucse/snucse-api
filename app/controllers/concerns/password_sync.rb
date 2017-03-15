@@ -1,6 +1,17 @@
 module PasswordSync
   extend ActiveSupport::Concern
 
+  def check_and_sync(user, password)
+    return false unless Rails.env.production?
+    http = Net::HTTP.new("id.snucse.org", 443)
+    http.use_ssl = true
+    resp = http.post("/Authentication/Login.aspx", "login_type=member_login&referrer=&redirect_mode=keep&secure=on&member_account=#{user.username}&member_password=#{password}")
+    return false if resp.code == "200"
+    user.password = password
+    user.save
+    return true
+  end
+
   def sync_password(username, password, new_password)
     http = Net::HTTP.new("id.snucse.org", 443)
     http.use_ssl = true
