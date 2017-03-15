@@ -79,7 +79,9 @@ class Api::V1::UsersController < Api::V1::ApiController
   param :currentPassword, String, desc: "현재 비밀번호", required: true, empty: false
   param :newPassword, String, desc: "새 비밀번호", required: true, empty: false
   def update_password
-    render_unauthorized and return unless @user.check_password(params[:currentPassword])
+    unless @user.check_password(params[:currentPassword])
+      render json: {}, status: :bad_request and return
+    end
     @user.password = params[:newPassword]
     @user.save
     sync_password(@user.username, params[:currentPassword], params[:newPassword]) if Rails.env.production?
