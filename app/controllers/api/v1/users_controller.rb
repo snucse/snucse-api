@@ -1,4 +1,5 @@
 class Api::V1::UsersController < Api::V1::ApiController
+  include PasswordSync
   skip_before_action :check_api_key, only: [:sign_in, :sign_up]
   skip_before_action :check_user_level
   api! "인증 후 access token을 전달한다."
@@ -81,6 +82,7 @@ class Api::V1::UsersController < Api::V1::ApiController
     render_unauthorized and return unless @user.check_password(params[:currentPassword])
     @user.password = params[:newPassword]
     @user.save
+    sync_password(@user.username, params[:currentPassword], params[:newPassword]) if Rails.env.production?
     render json: {}
   end
 
