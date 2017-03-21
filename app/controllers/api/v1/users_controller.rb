@@ -14,7 +14,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   EOS
   def sign_in
     user = User.where(username: params[:username]).first
-    if user and (user.check_password(params[:password]) or check_and_sync(user, params[:password]))
+    if user and check_password(params[:username], params[:password])
       if user.valid_level?
         api_key = ApiKey.create(
           user_id: user.id
@@ -32,7 +32,6 @@ class Api::V1::UsersController < Api::V1::ApiController
 
   api! "회원 가입을 처리한다."
   param :username, /^[A-Za-z][A-Za-z0-9]*$/, desc: "사용할 계정명(아이디)", required: true, empty: false
-  param :password, String, desc: "사용할 비밀번호", required: true, empty: false
   param :name, String, desc: "사용자의 이름", required: true, empty: false
   param :birthday, /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/, desc: "생년월일", required: false
   param :bsNumber, /^[0-9]{4}-[0-9]{5}$/, desc: "학번", required: false
@@ -45,7 +44,6 @@ class Api::V1::UsersController < Api::V1::ApiController
     end
     user = User.new(
       username: params[:username],
-      password: params[:password],
       name: params[:name],
       birthday: params[:birthday]
     )
@@ -79,11 +77,9 @@ class Api::V1::UsersController < Api::V1::ApiController
   param :currentPassword, String, desc: "현재 비밀번호", required: true, empty: false
   param :newPassword, String, desc: "새 비밀번호", required: true, empty: false
   def update_password
-    unless @user.check_password(params[:currentPassword]) or check_and_sync(@user, params[:currentPassword])
+    unless check_password(@user.username, params[:currentPassword])
       render json: {}, status: :bad_request and return
     end
-    @user.password = params[:newPassword]
-    @user.save
     sync_password(@user.username, params[:currentPassword], params[:newPassword]) if Rails.env.production?
     render json: {}
   end
