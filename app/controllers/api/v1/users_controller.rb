@@ -53,6 +53,7 @@ class Api::V1::UsersController < Api::V1::ApiController
       phone_number: [{phone_number: params[:phoneNumber], public: true}]
     )
     if user.save
+      sync_registration(params[:username], params[:name], params[:birthday], params[:bsNumber], params[:email], params[:phoneNumber]) if Rails.env.production?
       render json: {}
     else
       render json: {}, status: :bad_request

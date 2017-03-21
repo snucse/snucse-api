@@ -1,6 +1,15 @@
 module PasswordSync
   extend ActiveSupport::Concern
 
+  def sync_registration(username, name, birthday, bs_number, email, phone_number)
+    http = Net::HTTP.new("id.snucse.org", 443)
+    http.use_ssl = true
+    year = birthday[0..3]
+    month = birthday[5..6]
+    date = birthday[8..9]
+    http.post("/Account/JoinSubmit.aspx", "terms=on&name=#{name}&birth_year=#{year}&birth_month=#{month}&birth_date=#{date}&account=#{username}&bs_number=#{bs_number}&ms_number=&phd_number=&graduate_year=&graduate_month=&email=#{email}&phone=#{phone_number}")
+  end
+
   def check_password(username, password)
     if Rails.env.production?
       http = Net::HTTP.new("id.snucse.org", 443)
