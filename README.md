@@ -1,6 +1,6 @@
 # SNUCSE 3.0 Backend
 
-서울대학교 컴퓨터공학부 커뮤니티 서비스 스누씨(https://www.snucse.org)의 백엔드 코드입니다. [Ruby on Rails](http://rubyonrails.org/)를 프레임워크로 사용하고 있습니다.
+서울대학교 컴퓨터공학부 커뮤니티 서비스 스누씨(<https://www.snucse.org>)의 백엔드 코드입니다. [Ruby on Rails](http://rubyonrails.org/)를 프레임워크로 사용하고 있습니다.
 
 ## How to Contribute
 
