@@ -180,13 +180,15 @@ class Api::V1::ProfilesController < Api::V1::ApiController
 
   api! "프로필에서 태그를 삭제한다."
   param :tag, String, desc: "삭제할 태그", required: true, empty: false
+  error code: 200, desc: "태그가 이미 삭제된 경우 (오류상황이지만 정상상황과 마찬가지로 클라이언트에서 해당 태그가 삭제되면 되는 상황이므로 200을 리턴)"
   def destroy_tag
     @profile = Profile.find_by_sid! params[:id]
     check_profile(@profile)
     tag = Tag.find_by_name! params[:tag]
     profile_tag = ProfileTag.where(profile: @profile, tag: tag).first
     Activity.where(target: profile_tag).destroy_all
-    profile_tag.destroy
+    profile_tag.destroy if profile_tag
+    @profile.reload
     tag.check_and_deactivate
     render :show
   end

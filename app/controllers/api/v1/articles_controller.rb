@@ -176,13 +176,15 @@ class Api::V1::ArticlesController < Api::V1::ApiController
 
   api! "글에서 태그를 삭제한다."
   param :tag, String, desc: "삭제할 태그", required: true, empty: false
+  error code: 200, desc: "태그가 이미 삭제된 경우 (오류상황이지만 정상상황과 마찬가지로 클라이언트에서 해당 태그가 삭제되면 되는 상황이므로 200을 리턴)"
   def destroy_tag
     @article = Article.find params[:id]
     check_article(@article)
     tag = Tag.find_by_name! params[:tag]
     article_tag = ArticleTag.where(article: @article, tag: tag).first
     Activity.where(target: article_tag).destroy_all
-    article_tag.destroy
+    article_tag.destroy if article_tag
+    @article.reload
     tag.check_and_deactivate
     render :show
   end
@@ -223,6 +225,7 @@ class Api::V1::ArticlesController < Api::V1::ApiController
   api! "글에 첨부된 이미지에서 태그를 삭제한다."
   param :attachmentId, Integer, desc: "태그를 삭제할 첨부파일의 ID", required: true
   param :tag, String, desc: "삭제할 태그", required: true, empty: false
+  error code: 200, desc: "태그가 이미 삭제된 경우 (오류상황이지만 정상상황과 마찬가지로 클라이언트에서 해당 태그가 삭제되면 되는 상황이므로 200을 리턴)"
   def destroy_image_tag
     @article = Article.find params[:id]
     check_article(@article)
@@ -231,7 +234,8 @@ class Api::V1::ArticlesController < Api::V1::ApiController
     tag = Tag.find_by_name! params[:tag]
     image_tag = ImageTag.where(attachment_id: params[:attachmentId], tag: tag).first
     Activity.where(target: image_tag).destroy_all
-    image_tag.destroy
+    image_tag.destroy if image_tag
+    @article.reload
     tag.check_and_deactivate
     render :show
   end
