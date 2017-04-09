@@ -49,8 +49,10 @@ class Api::V1::UsersController < Api::V1::ApiController
     )
     user.set_information(
       bs_number: params[:bsNumber],
-      email: [{email: params[:email], public: true}],
-      phone_number: [{phone_number: params[:phoneNumber], public: true}]
+      email: params[:email],
+      is_email_public: true,
+      phone_number: params[:phoneNumber],
+      is_phone_number_public: true
     )
     if user.save
       sync_registration(params[:username], params[:name], params[:birthday], params[:bsNumber], params[:email], params[:phoneNumber]) if Rails.env.production?
@@ -90,12 +92,20 @@ class Api::V1::UsersController < Api::V1::ApiController
   param :bsNumber, /^[0-9]{4}-[0-9]{5}$/, desc: "학번", required: false
   param :email, String, desc: "이메일", required: false
   param :phoneNumber, /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/, desc: "전화번호", required: false
+  param :isBirthdayPublic, TrueClass, desc: "생년월일 공개 여부", required: false
+  param :isEmailPublic, TrueClass, desc: "이메일 공개 여부", required: false
+  param :isPhoneNumberPublic, TrueClass, desc: "전화번호 공개 여부", required: false
   def update
     @user.birthday = params[:birthday] if params[:birthday]
+    @user.is_birthday_public = params[:isBirthdayPublic] if params[:isBirthdayPublic]
+    is_email_public = if params[:isEmailPublic].nil? then nil else params[:isEmailPublic].to_s == "true" end
+    is_phone_number_public = if params[:isPhoneNumberPublic].nil? then nil else params[:isPhoneNumberPublic].to_s == "true" end
     @user.set_information(
       bs_number: params[:bsNumber],
-      email: [{email: params[:email], public: true}],
-      phone_number: [{phone_number: params[:phoneNumber], public: true}]
+      email: params[:email],
+      is_email_public: is_email_public,
+      phone_number: params[:phoneNumber],
+      is_phone_number_public: is_phone_number_public
     )
     @user.save
     render json: {}

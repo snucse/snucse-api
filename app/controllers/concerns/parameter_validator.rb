@@ -92,7 +92,7 @@ module ParameterValidator
 
     def validate(value)
       return false if value.nil?
-      ["0", "1", "true", "false"].include? value.to_s
+      ["true", "false"].include? value.to_s
     end
 
     def self.build(param_description, argument, options, block)

@@ -38,7 +38,15 @@ class User < ApplicationRecord
 
   def set_information(new_information)
     information = JSON.parse(self.information) rescue Hash.new
-    information.merge! new_information
+    information["bs_number"] = new_information[:bs_number] unless new_information[:bs_number].nil?
+    email = information["email"][0] rescue Hash.new
+    email["email"] = new_information[:email] unless new_information[:email].nil?
+    email["public"] = new_information[:is_email_public] unless new_information[:is_email_public].nil?
+    information["email"] = [email]
+    phone_number = information["phone_number"][0] rescue Hash.new
+    phone_number["phone_number"] = new_information[:phone_number] unless new_information[:phone_number].nil?
+    phone_number["public"] = new_information[:is_phone_number_public] unless new_information[:is_phone_number_public].nil?
+    information["phone_number"] = [phone_number]
     self.information = JSON.generate(information)
   end
 
