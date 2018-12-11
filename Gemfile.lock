@@ -1,9 +1,9 @@
 GIT
-  remote: git://github.com/Apipie/apipie-rails.git
-  revision: 150c982d2cb49ab13fd8138a578b4f1dd2a0b90b
+  remote: https://github.com/Apipie/apipie-rails.git
+  revision: a1ad7060bbd0e3e8711da18844c08fc6c9650ce8
   specs:
-    apipie-rails (0.3.7)
-      json
+    apipie-rails (0.5.14)
+      rails (>= 4.1)
 
 GEM
   remote: https://rubygems.org/
@@ -95,7 +95,6 @@ GEM
     jbuilder (2.6.1)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
-    json (2.0.3)
     kaminari (1.0.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.0.1)
