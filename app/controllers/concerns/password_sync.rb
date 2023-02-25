@@ -7,7 +7,7 @@ module PasswordSync
     year = birthday[0..3]
     month = birthday[5..6]
     date = birthday[8..9]
-    http.post("/Account/JoinSubmit.aspx", {terms: "on", name: name, birth_year: year, birth_month: month, birth_date: date, account: username, bs_number: bs_number, ms_number: nil, phd_number: nil, graduate_year: nil, graduate_month: nil, email: email, phone: phone_number}.to_query)
+    http.post("/Account/JoinSubmit.aspx", {terms: "on", consent: "on", name: name, birth_year: year, birth_month: month, birth_date: date, account: username, bs_number: bs_number, ms_number: nil, phd_number: nil, graduate_year: nil, graduate_month: nil, email: email, phone: phone_number}.to_query)
   end
 
   def check_password(username, password)

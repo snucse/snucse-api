@@ -15,6 +15,14 @@ class Api::V1::UsersController < Api::V1::ApiController
   def sign_in
     user = User.where(username: params[:username]).first
     if user and check_password(params[:username], params[:password])
+      if user.level == 0
+        profile = Profile.create(sid: user.username, name: user.name, profile_type: 2, admin_id: user.id, description: "", rendering_mode: 1)
+        [4538, 4760, 4761, 4925, 4759].each do |pid|
+          Follow.create(user_id: user.id, profile_id: pid)
+        end
+        Follow.create(user_id: user.id, profile_id: profile.id)
+        user.update_attributes(level: 2)
+      end
       if user.valid_level?
         api_key = ApiKey.create(
           user_id: user.id
